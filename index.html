@@ -1,8 +1,8 @@
-<html lang="id" class="scroll-smooth">
+<html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Cybercrime Theme - Image to Short URL Converter</title>
+  <title>CyberSafe Link Shortener</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link
     rel="stylesheet"
@@ -15,204 +15,478 @@
   <style>
     body {
       font-family: 'Share Tech Mono', monospace;
-      background-color: #121212; /* darker black */
-      color: #a1a1aa; /* soft gray */
+      background-color: #0f111a;
+      color: #00ff99;
+      overflow-x: hidden;
     }
-    ::selection {
-      background-color: #ef4444;
-      color: #fff;
+    /* Hacker matrix style vertical lines */
+    .matrix-column {
+      position: absolute;
+      width: 2px;
+      height: 100vh;
+      background: linear-gradient(180deg, #00ff99 0%, transparent 100%);
+      animation: fall 5s linear infinite;
+      opacity: 0.15;
+      filter: drop-shadow(0 0 2px #00ff99);
     }
-    /* Custom scrollbar for cyber theme */
+    @keyframes fall {
+      0% {
+        top: -100vh;
+        opacity: 0.15;
+      }
+      100% {
+        top: 100vh;
+        opacity: 0;
+      }
+    }
+    /* Error glitch text effect */
+    .glitch {
+      position: relative;
+      color: #00ff99;
+      font-size: 2.5rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      animation: glitch-anim 2s infinite;
+    }
+    .glitch::before,
+    .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      left: 0;
+      width: 100%;
+      opacity: 0.8;
+      clip: rect(0, 900px, 0, 0);
+    }
+    .glitch::before {
+      animation: glitch-anim-before 2s infinite;
+      color: #ff005c;
+      z-index: -1;
+    }
+    .glitch::after {
+      animation: glitch-anim-after 2s infinite;
+      color: #00fff7;
+      z-index: -1;
+    }
+    @keyframes glitch-anim {
+      0% {
+        text-shadow: 2px 0 #00fff7, -2px 0 #ff005c;
+      }
+      20% {
+        text-shadow: -2px 0 #00fff7, 2px 0 #ff005c;
+      }
+      40% {
+        text-shadow: 2px 0 #00fff7, -2px 0 #ff005c;
+      }
+      60% {
+        text-shadow: -2px 0 #00fff7, 2px 0 #ff005c;
+      }
+      80% {
+        text-shadow: 2px 0 #00fff7, -2px 0 #ff005c;
+      }
+      100% {
+        text-shadow: -2px 0 #00fff7, 2px 0 #ff005c;
+      }
+    }
+    @keyframes glitch-anim-before {
+      0% {
+        clip: rect(0, 900px, 0, 0);
+        transform: translate(0);
+      }
+      10% {
+        clip: rect(10px, 900px, 50px, 0);
+        transform: translate(-2px, -2px);
+      }
+      20% {
+        clip: rect(0, 900px, 0, 0);
+        transform: translate(0);
+      }
+      30% {
+        clip: rect(20px, 900px, 60px, 0);
+        transform: translate(-2px, 2px);
+      }
+      40% {
+        clip: rect(0, 900px, 0, 0);
+        transform: translate(0);
+      }
+      50% {
+        clip: rect(15px, 900px, 55px, 0);
+        transform: translate(-2px, -2px);
+      }
+      60% {
+        clip: rect(0, 900px, 0, 0);
+        transform: translate(0);
+      }
+      70% {
+        clip: rect(10px, 900px, 50px, 0);
+        transform: translate(-2px, 2px);
+      }
+      80% {
+        clip: rect(0, 900px, 0, 0);
+        transform: translate(0);
+      }
+      90% {
+        clip: rect(20px, 900px, 60px, 0);
+        transform: translate(-2px, -2px);
+      }
+      100% {
+        clip: rect(0, 900px, 0, 0);
+        transform: translate(0);
+      }
+    }
+    @keyframes glitch-anim-after {
+      0% {
+        clip: rect(0, 900px, 0, 0);
+        transform: translate(0);
+      }
+      10% {
+        clip: rect(10px, 900px, 50px, 0);
+        transform: translate(2px, 2px);
+      }
+      20% {
+        clip: rect(0, 900px, 0, 0);
+        transform: translate(0);
+      }
+      30% {
+        clip: rect(20px, 900px, 60px, 0);
+        transform: translate(2px, -2px);
+      }
+      40% {
+        clip: rect(0, 900px, 0, 0);
+        transform: translate(0);
+      }
+      50% {
+        clip: rect(15px, 900px, 55px, 0);
+        transform: translate(2px, 2px);
+      }
+      60% {
+        clip: rect(0, 900px, 0, 0);
+        transform: translate(0);
+      }
+      70% {
+        clip: rect(10px, 900px, 50px, 0);
+        transform: translate(2px, -2px);
+      }
+      80% {
+        clip: rect(0, 900px, 0, 0);
+        transform: translate(0);
+      }
+      90% {
+        clip: rect(20px, 900px, 60px, 0);
+        transform: translate(2px, 2px);
+      }
+      100% {
+        clip: rect(0, 900px, 0, 0);
+        transform: translate(0);
+      }
+    }
+    /* Flickering error lines */
+    .error-line {
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      background: #ff005c;
+      opacity: 0.1;
+      animation: flicker 3s infinite;
+      filter: drop-shadow(0 0 4px #ff005c);
+      mix-blend-mode: screen;
+    }
+    .error-line:nth-child(1) {
+      top: 20vh;
+      animation-delay: 0s;
+    }
+    .error-line:nth-child(2) {
+      top: 40vh;
+      animation-delay: 1s;
+    }
+    .error-line:nth-child(3) {
+      top: 60vh;
+      animation-delay: 2s;
+    }
+    @keyframes flicker {
+      0%, 100% {
+        opacity: 0.1;
+      }
+      50% {
+        opacity: 0.5;
+      }
+    }
+    /* Scrollbar styling */
     ::-webkit-scrollbar {
       width: 8px;
-      background-color: #121212;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f111a;
     }
     ::-webkit-scrollbar-thumb {
-      background-color: #ef4444;
+      background: #00ff99;
       border-radius: 4px;
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col items-center p-6">
-  <header class="w-full max-w-4xl mb-10 text-center">
-    <h1 class="text-5xl font-extrabold text-red-500 drop-shadow-[0_0_10px_rgba(239,68,68,0.7)] mb-3 tracking-widest uppercase">
-      <i class="fas fa-user-secret mr-3"></i>Cybercrime Image to Short URL
-    </h1>
-    <p class="text-gray-400 text-base max-w-2xl mx-auto leading-relaxed">
-      Unggah gambar Anda dan dapatkan URL pendek yang mudah dibagikan. Tema cybercrime dengan nuansa gelap, futuristik, dan minimalis.
+<body class="relative min-h-screen flex flex-col items-center justify-center px-4 py-12 select-none">
+
+  <!-- Matrix vertical lines for background -->
+  <div aria-hidden="true">
+    <div class="matrix-column" style="left: 5vw; animation-delay: 0s;"></div>
+    <div class="matrix-column" style="left: 15vw; animation-delay: 1.5s;"></div>
+    <div class="matrix-column" style="left: 25vw; animation-delay: 3s;"></div>
+    <div class="matrix-column" style="left: 35vw; animation-delay: 4.5s;"></div>
+    <div class="matrix-column" style="left: 45vw; animation-delay: 2s;"></div>
+    <div class="matrix-column" style="left: 55vw; animation-delay: 3.5s;"></div>
+    <div class="matrix-column" style="left: 65vw; animation-delay: 1s;"></div>
+    <div class="matrix-column" style="left: 75vw; animation-delay: 4s;"></div>
+    <div class="matrix-column" style="left: 85vw; animation-delay: 0.5s;"></div>
+    <div class="matrix-column" style="left: 95vw; animation-delay: 2.5s;"></div>
+  </div>
+
+  <!-- Flickering error lines -->
+  <div aria-hidden="true">
+    <div class="error-line"></div>
+    <div class="error-line"></div>
+    <div class="error-line"></div>
+  </div>
+
+  <header class="z-10 mb-12 text-center">
+    <h1 class="glitch" data-text="CYBERSAFE LINK">CYBERSAFE LINK</h1>
+    <p class="mt-2 text-sm text-green-400/70 tracking-widest uppercase">
+      Secure &amp; Obfuscate Your Download Links
     </p>
   </header>
 
-  <main class="w-full max-w-4xl bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-xl shadow-2xl p-8 flex flex-col space-y-8">
-    <form id="imageForm" class="flex flex-col space-y-5" aria-label="Form upload gambar">
-      <label for="imageInput" class="text-red-500 font-semibold text-xl flex items-center space-x-3">
-        <i class="fas fa-upload text-red-600 text-2xl"></i>
-        <span>Upload Gambar</span>
+  <main class="z-10 w-full max-w-xl bg-[#011a0f] bg-opacity-80 rounded-lg shadow-lg p-8 border border-green-600">
+    <form id="shortenForm" class="flex flex-col space-y-6">
+      <label for="urlInput" class="text-green-400 font-semibold text-lg">
+        Masukkan URL asli yang ingin disembunyikan:
       </label>
       <input
-        type="file"
-        id="imageInput"
-        accept="image/*"
-        class="file-input file-input-bordered file-input-error text-gray-300 bg-gray-900 border-red-600 hover:border-red-500 focus:ring-red-500 focus:border-red-500 rounded-lg"
-        aria-describedby="fileHelp"
+        id="urlInput"
+        type="url"
+        placeholder="https://example.com/download/file.zip"
         required
+        class="w-full rounded-md bg-[#002214] border border-green-600 text-green-300 placeholder-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 px-4 py-3 font-mono text-sm"
       />
-      <p id="fileHelp" class="text-xs text-gray-500">
-        Maksimal ukuran file: 5MB. Format: JPG, PNG, GIF, BMP, WEBP.
-      </p>
       <button
         type="submit"
-        class="bg-red-600 hover:bg-red-700 transition text-white font-extrabold py-3 rounded-lg flex items-center justify-center space-x-3 text-lg tracking-wide shadow-lg shadow-red-700/50"
+        class="self-center bg-green-500 hover:bg-green-600 active:bg-green-700 transition-colors rounded-md px-6 py-3 font-semibold text-black tracking-wider shadow-md"
       >
-        <i class="fas fa-magic text-xl"></i>
-        <span>Convert to Short URL</span>
+        Buat Link Aman
       </button>
     </form>
 
-    <section id="resultSection" class="hidden flex flex-col space-y-4" aria-live="polite" aria-atomic="true">
-      <h2 class="text-red-400 font-bold text-2xl flex items-center space-x-3 select-text">
-        <i class="fas fa-link text-red-500 text-3xl"></i>
-        <span>Hasil URL Pendek</span>
-      </h2>
-      <input
-        id="resultInput"
-        readonly
-        type="text"
-        class="w-full bg-gray-900 border border-red-600 rounded-lg p-4 text-lg font-mono text-red-400 focus:outline-none focus:ring-2 focus:ring-red-500 select-all"
-        aria-label="Hasil URL pendek"
-      />
-      <div class="flex space-x-5">
-        <button
-          id="copyBtn"
-          class="flex-1 bg-red-600 hover:bg-red-700 transition text-white font-bold py-3 rounded-lg flex items-center justify-center space-x-3 shadow-md shadow-red-700/60"
-          aria-label="Salin URL ke clipboard"
-        >
-          <i class="fas fa-copy text-lg"></i>
-          <span>Salin URL</span>
-        </button>
-        <button
-          id="downloadBtn"
-          class="flex-1 bg-red-600 hover:bg-red-700 transition text-white font-bold py-3 rounded-lg flex items-center justify-center space-x-3 shadow-md shadow-red-700/60"
-          aria-label="Download gambar asli"
-        >
-          <i class="fas fa-download text-lg"></i>
-          <span>Download Gambar</span>
-        </button>
-      </div>
-    </section>
-
-    <section id="previewSection" class="hidden flex flex-col items-center space-y-3">
-      <h3 class="text-red-400 font-bold text-xl flex items-center space-x-3">
-        <i class="fas fa-image text-red-500 text-3xl"></i>
-        <span>Preview Gambar</span>
-      </h3>
-      <img
-        id="previewImage"
-        alt="Preview gambar yang diupload"
-        class="max-w-full max-h-72 rounded-xl border-4 border-red-600 shadow-lg shadow-red-700/70"
-        src=""
-        width="400"
-        height="225"
-      />
+    <section id="resultSection" class="mt-8 hidden flex-col items-center space-y-4">
+      <p class="text-green-300 font-mono break-words text-center text-sm"></p>
+      <button
+        id="copyBtn"
+        class="bg-green-600 hover:bg-green-700 active:bg-green-800 transition-colors rounded-md px-4 py-2 text-black font-semibold tracking-wide"
+      >
+        <i class="fas fa-copy mr-2"></i> Salin Link
+      </button>
     </section>
   </main>
 
-  <footer class="mt-auto w-full max-w-4xl text-center text-gray-500 text-xs py-8 select-none tracking-widest">
-    &copy; 2024 Cybercrime Image to Short URL Converter
+  <section
+    id="adSection"
+    class="z-10 fixed inset-0 bg-[#00110aee] backdrop-blur-sm flex flex-col items-center justify-center p-6 space-y-6 text-center text-green-400 font-mono text-sm hidden"
+  >
+    <h2 class="text-2xl font-bold glitch" data-text="PERINGATAN">PERINGATAN</h2>
+    <p>
+      Link yang Anda akses melewati sistem keamanan kami.<br />
+      Harap ikuti langkah-langkah berikut untuk melanjutkan ke unduhan.
+    </p>
+
+    <div class="max-w-md w-full bg-[#002214] border border-green-600 rounded-lg p-6 space-y-4 shadow-lg">
+      <p>
+        <i class="fas fa-ad mr-2"></i> Tonton iklan singkat ini untuk membuka link.
+      </p>
+      <div class="w-full bg-green-900 rounded-full h-4 overflow-hidden relative">
+        <div
+          id="adProgress"
+          class="bg-green-500 h-4 rounded-full transition-all duration-1000"
+          style="width: 0%"
+        ></div>
+      </div>
+      <p id="adTimer" class="text-green-300 font-semibold tracking-wide">5 detik tersisa</p>
+    </div>
+
+    <button
+      id="skipBtn"
+      class="bg-red-700 hover:bg-red-800 active:bg-red-900 transition-colors rounded-md px-6 py-3 font-semibold tracking-wide"
+      disabled
+    >
+      Lewati Iklan
+    </button>
+  </section>
+
+  <section
+    id="finalSection"
+    class="z-10 fixed inset-0 bg-[#00110aee] backdrop-blur-sm flex flex-col items-center justify-center p-6 space-y-6 text-center text-green-400 font-mono text-sm hidden"
+  >
+    <h2 class="text-2xl font-bold glitch" data-text="LINK TERBUKA">LINK TERBUKA</h2>
+    <p>Terima kasih sudah menunggu. Klik tombol di bawah untuk melanjutkan ke unduhan.</p>
+    <a
+      id="finalLink"
+      href="#"
+      target="_blank"
+      rel="noopener noreferrer nofollow"
+      class="inline-flex items-center space-x-2 bg-green-600 hover:bg-green-700 active:bg-green-800 transition-colors rounded-md px-6 py-3 font-semibold tracking-wide text-black"
+    >
+      <i class="fas fa-download"></i>
+      <span>Unduh Sekarang</span>
+    </a>
+  </section>
+
+  <footer class="z-10 mt-16 text-green-600 text-xs font-mono tracking-widest select-text">
+    &copy; 2024 CyberSafe Link. All rights reserved.
   </footer>
 
   <script>
-    const imageForm = document.getElementById('imageForm');
-    const imageInput = document.getElementById('imageInput');
-    const resultSection = document.getElementById('resultSection');
-    const resultInput = document.getElementById('resultInput');
-    const copyBtn = document.getElementById('copyBtn');
-    const downloadBtn = document.getElementById('downloadBtn');
-    const previewSection = document.getElementById('previewSection');
-    const previewImage = document.getElementById('previewImage');
+    (() => {
+      const form = document.getElementById('shortenForm');
+      const urlInput = document.getElementById('urlInput');
+      const resultSection = document.getElementById('resultSection');
+      const resultText = resultSection.querySelector('p');
+      const copyBtn = document.getElementById('copyBtn');
 
-    let currentBlobUrl = '';
-    let currentFileName = '';
+      const adSection = document.getElementById('adSection');
+      const adProgress = document.getElementById('adProgress');
+      const adTimer = document.getElementById('adTimer');
+      const skipBtn = document.getElementById('skipBtn');
 
-    // Function to generate a short random string for URL
-    function generateShortId(length = 8) {
-      const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-      let result = '';
-      for (let i = 0; i < length; i++) {
-        result += chars.charAt(Math.floor(Math.random() * chars.length));
-      }
-      return result;
-    }
+      const finalSection = document.getElementById('finalSection');
+      const finalLink = document.getElementById('finalLink');
 
-    imageForm.addEventListener('submit', (e) => {
-      e.preventDefault();
+      // Simulated short link base URL (in real app, this would be your domain)
+      const baseShortUrl = window.location.origin + '/s/';
 
-      const file = imageInput.files[0];
-      if (!file) {
-        alert('Silakan pilih file gambar terlebih dahulu.');
-        return;
-      }
+      // Store shortened links in-memory (simulate DB)
+      const linkStore = {};
 
-      if (!file.type.startsWith('image/')) {
-        alert('File yang dipilih bukan gambar.');
-        return;
+      // Generate a random 6-character alphanumeric code
+      function generateCode() {
+        const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let code = '';
+        for (let i = 0; i < 6; i++) {
+          code += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return code;
       }
 
-      if (file.size > 5 * 1024 * 1024) {
-        alert('Ukuran file terlalu besar. Maksimal 5MB.');
-        return;
+      // Create a short link and store original URL
+      function createShortLink(originalUrl) {
+        let code;
+        do {
+          code = generateCode();
+        } while (linkStore[code]);
+        linkStore[code] = originalUrl;
+        return baseShortUrl + code;
       }
 
-      // Revoke previous blob URL if any
-      if (currentBlobUrl) {
-        URL.revokeObjectURL(currentBlobUrl);
-        currentBlobUrl = '';
+      // Copy to clipboard helper
+      function copyToClipboard(text) {
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(text);
+        } else {
+          const textarea = document.createElement('textarea');
+          textarea.value = text;
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textarea);
+        }
       }
 
-      // Create a blob URL for the image file
-      currentBlobUrl = URL.createObjectURL(file);
-      currentFileName = file.name;
+      // Show ad screen and start countdown
+      function showAdScreen(shortCode) {
+        adSection.classList.remove('hidden');
+        let duration = 5; // seconds
+        adProgress.style.width = '0%';
+        adTimer.textContent = `${duration} detik tersisa`;
+        skipBtn.disabled = true;
 
-      // Generate a fake short URL (simulate short URL)
-      // In real app, this would be a call to a backend shortener service
-      const shortId = generateShortId(8);
-      const shortUrl = `${window.location.origin}/img/${shortId}`;
+        let elapsed = 0;
+        const interval = setInterval(() => {
+          elapsed++;
+          const percent = (elapsed / duration) * 100;
+          adProgress.style.width = percent + '%';
+          const left = duration - elapsed;
+          adTimer.textContent = `${left} detik tersisa`;
+          if (elapsed >= duration) {
+            clearInterval(interval);
+            skipBtn.disabled = false;
+            adTimer.textContent = 'Iklan selesai, Anda dapat melewati iklan.';
+          }
+        }, 1000);
 
-      // Show result
-      resultInput.value = shortUrl;
-      resultSection.classList.remove('hidden');
+        skipBtn.onclick = () => {
+          clearInterval(interval);
+          adSection.classList.add('hidden');
+          showFinalScreen(shortCode);
+        };
+      }
 
-      // Show preview
-      previewImage.src = currentBlobUrl;
-      previewImage.alt = `Preview gambar ${file.name}`;
-      previewSection.classList.remove('hidden');
+      // Show final screen with real link
+      function showFinalScreen(shortCode) {
+        finalSection.classList.remove('hidden');
+        finalLink.href = linkStore[shortCode] || '#';
+      }
 
-      // Focus and select the short URL input
-      resultInput.focus();
-      resultInput.select();
-    });
+      // Hide all overlays
+      function hideAllOverlays() {
+        adSection.classList.add('hidden');
+        finalSection.classList.add('hidden');
+      }
 
-    copyBtn.addEventListener('click', () => {
-      if (!resultInput.value) return;
-      navigator.clipboard.writeText(resultInput.value).then(() => {
-        copyBtn.textContent = 'Tersalin!';
-        setTimeout(() => {
-          copyBtn.innerHTML = '<i class="fas fa-copy text-lg"></i><span>Salin URL</span>';
-        }, 2000);
-      }).catch(() => {
-        alert('Gagal menyalin ke clipboard.');
+      // Handle form submit
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        hideAllOverlays();
+
+        const originalUrl = urlInput.value.trim();
+        if (!originalUrl) return;
+
+        // Create short link
+        const shortLink = createShortLink(originalUrl);
+
+        // Show short link to user
+        resultText.textContent = shortLink;
+        resultSection.classList.remove('hidden');
+
+        // On click short link, simulate redirect with ads
+        resultText.onclick = () => {
+          // Extract code from short link
+          const code = shortLink.split('/').pop();
+          // Show ad screen
+          adSection.classList.remove('hidden');
+          finalSection.classList.add('hidden');
+          showAdScreen(code);
+        };
       });
-    });
 
-    downloadBtn.addEventListener('click', () => {
-      if (!currentBlobUrl) return;
-      const a = document.createElement('a');
-      a.href = currentBlobUrl;
-      a.download = currentFileName || 'image.png';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    });
+      // Copy button
+      copyBtn.addEventListener('click', () => {
+        if (resultText.textContent) {
+          copyToClipboard(resultText.textContent);
+          copyBtn.textContent = 'Tersalin!';
+          setTimeout(() => {
+            copyBtn.innerHTML = '<i class="fas fa-copy mr-2"></i> Salin Link';
+          }, 2000);
+        }
+      });
+
+      // Clicking final link closes overlay after opening
+      finalLink.addEventListener('click', () => {
+        finalSection.classList.add('hidden');
+      });
+
+      // Clicking outside overlays closes them
+      [adSection, finalSection].forEach((section) => {
+        section.addEventListener('click', (e) => {
+          if (e.target === section) {
+            section.classList.add('hidden');
+          }
+        });
+      });
+    })();
   </script>
 </body>
-</html>
+    </html>
