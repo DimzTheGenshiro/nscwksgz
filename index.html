@@ -1,492 +1,442 @@
-<html lang="en" class="scroll-smooth">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CyberSafe Link Shortener</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-  />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap"
-    rel="stylesheet"
-  />
+<html class="scroll-smooth" lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Cybercrime Hacker Animation Web
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&amp;display=swap" rel="stylesheet"/>
   <style>
-    body {
+   body, html {
+      margin: 0; padding: 0; height: 100%;
       font-family: 'Share Tech Mono', monospace;
-      background-color: #0f111a;
-      color: #00ff99;
+      background-color: #000;
+      color: #0f0;
       overflow-x: hidden;
     }
-    /* Hacker matrix style vertical lines */
-    .matrix-column {
-      position: absolute;
-      width: 2px;
-      height: 100vh;
-      background: linear-gradient(180deg, #00ff99 0%, transparent 100%);
-      animation: fall 5s linear infinite;
-      opacity: 0.15;
-      filter: drop-shadow(0 0 2px #00ff99);
-    }
-    @keyframes fall {
-      0% {
-        top: -100vh;
-        opacity: 0.15;
-      }
-      100% {
-        top: 100vh;
-        opacity: 0;
-      }
-    }
-    /* Error glitch text effect */
-    .glitch {
-      position: relative;
-      color: #00ff99;
-      font-size: 2.5rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      animation: glitch-anim 2s infinite;
-    }
-    .glitch::before,
-    .glitch::after {
-      content: attr(data-text);
-      position: absolute;
-      left: 0;
-      width: 100%;
-      opacity: 0.8;
-      clip: rect(0, 900px, 0, 0);
-    }
-    .glitch::before {
-      animation: glitch-anim-before 2s infinite;
-      color: #ff005c;
-      z-index: -1;
-    }
-    .glitch::after {
-      animation: glitch-anim-after 2s infinite;
-      color: #00fff7;
-      z-index: -1;
-    }
-    @keyframes glitch-anim {
-      0% {
-        text-shadow: 2px 0 #00fff7, -2px 0 #ff005c;
-      }
-      20% {
-        text-shadow: -2px 0 #00fff7, 2px 0 #ff005c;
-      }
-      40% {
-        text-shadow: 2px 0 #00fff7, -2px 0 #ff005c;
-      }
-      60% {
-        text-shadow: -2px 0 #00fff7, 2px 0 #ff005c;
-      }
-      80% {
-        text-shadow: 2px 0 #00fff7, -2px 0 #ff005c;
-      }
-      100% {
-        text-shadow: -2px 0 #00fff7, 2px 0 #ff005c;
-      }
-    }
-    @keyframes glitch-anim-before {
-      0% {
-        clip: rect(0, 900px, 0, 0);
-        transform: translate(0);
-      }
-      10% {
-        clip: rect(10px, 900px, 50px, 0);
-        transform: translate(-2px, -2px);
-      }
-      20% {
-        clip: rect(0, 900px, 0, 0);
-        transform: translate(0);
-      }
-      30% {
-        clip: rect(20px, 900px, 60px, 0);
-        transform: translate(-2px, 2px);
-      }
-      40% {
-        clip: rect(0, 900px, 0, 0);
-        transform: translate(0);
-      }
-      50% {
-        clip: rect(15px, 900px, 55px, 0);
-        transform: translate(-2px, -2px);
-      }
-      60% {
-        clip: rect(0, 900px, 0, 0);
-        transform: translate(0);
-      }
-      70% {
-        clip: rect(10px, 900px, 50px, 0);
-        transform: translate(-2px, 2px);
-      }
-      80% {
-        clip: rect(0, 900px, 0, 0);
-        transform: translate(0);
-      }
-      90% {
-        clip: rect(20px, 900px, 60px, 0);
-        transform: translate(-2px, -2px);
-      }
-      100% {
-        clip: rect(0, 900px, 0, 0);
-        transform: translate(0);
-      }
-    }
-    @keyframes glitch-anim-after {
-      0% {
-        clip: rect(0, 900px, 0, 0);
-        transform: translate(0);
-      }
-      10% {
-        clip: rect(10px, 900px, 50px, 0);
-        transform: translate(2px, 2px);
-      }
-      20% {
-        clip: rect(0, 900px, 0, 0);
-        transform: translate(0);
-      }
-      30% {
-        clip: rect(20px, 900px, 60px, 0);
-        transform: translate(2px, -2px);
-      }
-      40% {
-        clip: rect(0, 900px, 0, 0);
-        transform: translate(0);
-      }
-      50% {
-        clip: rect(15px, 900px, 55px, 0);
-        transform: translate(2px, 2px);
-      }
-      60% {
-        clip: rect(0, 900px, 0, 0);
-        transform: translate(0);
-      }
-      70% {
-        clip: rect(10px, 900px, 50px, 0);
-        transform: translate(2px, -2px);
-      }
-      80% {
-        clip: rect(0, 900px, 0, 0);
-        transform: translate(0);
-      }
-      90% {
-        clip: rect(20px, 900px, 60px, 0);
-        transform: translate(2px, 2px);
-      }
-      100% {
-        clip: rect(0, 900px, 0, 0);
-        transform: translate(0);
-      }
-    }
-    /* Flickering error lines */
-    .error-line {
-      position: absolute;
-      width: 100%;
-      height: 2px;
-      background: #ff005c;
-      opacity: 0.1;
-      animation: flicker 3s infinite;
-      filter: drop-shadow(0 0 4px #ff005c);
-      mix-blend-mode: screen;
-    }
-    .error-line:nth-child(1) {
-      top: 20vh;
-      animation-delay: 0s;
-    }
-    .error-line:nth-child(2) {
-      top: 40vh;
-      animation-delay: 1s;
-    }
-    .error-line:nth-child(3) {
-      top: 60vh;
-      animation-delay: 2s;
-    }
+    /* Hacker text flicker animation */
     @keyframes flicker {
+      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        opacity: 1;
+      }
+      20%, 22%, 24%, 55% {
+        opacity: 0.4;
+      }
+    }
+    .flicker {
+      animation: flicker 1.5s infinite;
+    }
+    /* Matrix style falling code */
+    .matrix-code {
+      font-size: 0.75rem;
+      line-height: 1rem;
+      color: #0f0;
+      user-select: none;
+      white-space: nowrap;
+      font-weight: 700;
+      text-shadow:
+        0 0 5px #0f0,
+        0 0 10px #0f0,
+        0 0 20px #0f0,
+        0 0 40px #0f0;
+    }
+    /* Circle pulse animation */
+    @keyframes pulse-green {
       0%, 100% {
-        opacity: 0.1;
+        box-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
       }
       50% {
-        opacity: 0.5;
+        box-shadow: 0 0 30px #0f0, 0 0 60px #0f0;
       }
     }
-    /* Scrollbar styling */
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #0f111a;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #00ff99;
-      border-radius: 4px;
+    .pulse-green {
+      animation: pulse-green 2.5s infinite;
     }
   </style>
-</head>
-<body class="relative min-h-screen flex flex-col items-center justify-center px-4 py-12 select-none">
-
-  <!-- Matrix vertical lines for background -->
-  <div aria-hidden="true">
-    <div class="matrix-column" style="left: 5vw; animation-delay: 0s;"></div>
-    <div class="matrix-column" style="left: 15vw; animation-delay: 1.5s;"></div>
-    <div class="matrix-column" style="left: 25vw; animation-delay: 3s;"></div>
-    <div class="matrix-column" style="left: 35vw; animation-delay: 4.5s;"></div>
-    <div class="matrix-column" style="left: 45vw; animation-delay: 2s;"></div>
-    <div class="matrix-column" style="left: 55vw; animation-delay: 3.5s;"></div>
-    <div class="matrix-column" style="left: 65vw; animation-delay: 1s;"></div>
-    <div class="matrix-column" style="left: 75vw; animation-delay: 4s;"></div>
-    <div class="matrix-column" style="left: 85vw; animation-delay: 0.5s;"></div>
-    <div class="matrix-column" style="left: 95vw; animation-delay: 2.5s;"></div>
-  </div>
-
-  <!-- Flickering error lines -->
-  <div aria-hidden="true">
-    <div class="error-line"></div>
-    <div class="error-line"></div>
-    <div class="error-line"></div>
-  </div>
-
-  <header class="z-10 mb-12 text-center">
-    <h1 class="glitch" data-text="CYBERSAFE LINK">CYBERSAFE LINK</h1>
-    <p class="mt-2 text-sm text-green-400/70 tracking-widest uppercase">
-      Secure &amp; Obfuscate Your Download Links
-    </p>
-  </header>
-
-  <main class="z-10 w-full max-w-xl bg-[#011a0f] bg-opacity-80 rounded-lg shadow-lg p-8 border border-green-600">
-    <form id="shortenForm" class="flex flex-col space-y-6">
-      <label for="urlInput" class="text-green-400 font-semibold text-lg">
-        Masukkan URL asli yang ingin disembunyikan:
-      </label>
-      <input
-        id="urlInput"
-        type="url"
-        placeholder="https://example.com/download/file.zip"
-        required
-        class="w-full rounded-md bg-[#002214] border border-green-600 text-green-300 placeholder-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 px-4 py-3 font-mono text-sm"
-      />
-      <button
-        type="submit"
-        class="self-center bg-green-500 hover:bg-green-600 active:bg-green-700 transition-colors rounded-md px-6 py-3 font-semibold text-black tracking-wider shadow-md"
-      >
-        Buat Link Aman
-      </button>
-    </form>
-
-    <section id="resultSection" class="mt-8 hidden flex-col items-center space-y-4">
-      <p class="text-green-300 font-mono break-words text-center text-sm"></p>
-      <button
-        id="copyBtn"
-        class="bg-green-600 hover:bg-green-700 active:bg-green-800 transition-colors rounded-md px-4 py-2 text-black font-semibold tracking-wide"
-      >
-        <i class="fas fa-copy mr-2"></i> Salin Link
-      </button>
-    </section>
-  </main>
-
-  <section
-    id="adSection"
-    class="z-10 fixed inset-0 bg-[#00110aee] backdrop-blur-sm flex flex-col items-center justify-center p-6 space-y-6 text-center text-green-400 font-mono text-sm hidden"
-  >
-    <h2 class="text-2xl font-bold glitch" data-text="PERINGATAN">PERINGATAN</h2>
-    <p>
-      Link yang Anda akses melewati sistem keamanan kami.<br />
-      Harap ikuti langkah-langkah berikut untuk melanjutkan ke unduhan.
-    </p>
-
-    <div class="max-w-md w-full bg-[#002214] border border-green-600 rounded-lg p-6 space-y-4 shadow-lg">
-      <p>
-        <i class="fas fa-ad mr-2"></i> Tonton iklan singkat ini untuk membuka link.
-      </p>
-      <div class="w-full bg-green-900 rounded-full h-4 overflow-hidden relative">
-        <div
-          id="adProgress"
-          class="bg-green-500 h-4 rounded-full transition-all duration-1000"
-          style="width: 0%"
-        ></div>
-      </div>
-      <p id="adTimer" class="text-green-300 font-semibold tracking-wide">5 detik tersisa</p>
+ </head>
+ <body>
+  <div class="fixed inset-0 bg-black flex flex-col justify-center items-center z-50" id="animation-screen">
+   <img alt="Animated hacker cybercrime themed digital matrix style animation with green glowing code streams and futuristic cyber elements" class="w-72 h-72 mb-8" height="300" id="animation-image" src="https://storage.googleapis.com/a1aa/image/40ad0b31-068a-49b8-fba8-64e873f4e21e.jpg" width="300"/>
+   <div class="text-green-500 text-2xl flicker select-none" id="animation-text">
+    Initiating Cybercrime Hack Protocol...
+   </div>
+   <div class="mt-6 w-64 h-1 bg-green-900 rounded overflow-hidden">
+    <div class="h-1 bg-green-500 w-0" id="progress-bar">
     </div>
-
-    <button
-      id="skipBtn"
-      class="bg-red-700 hover:bg-red-800 active:bg-red-900 transition-colors rounded-md px-6 py-3 font-semibold tracking-wide"
-      disabled
-    >
-      Lewati Iklan
-    </button>
-  </section>
-
-  <section
-    id="finalSection"
-    class="z-10 fixed inset-0 bg-[#00110aee] backdrop-blur-sm flex flex-col items-center justify-center p-6 space-y-6 text-center text-green-400 font-mono text-sm hidden"
-  >
-    <h2 class="text-2xl font-bold glitch" data-text="LINK TERBUKA">LINK TERBUKA</h2>
-    <p>Terima kasih sudah menunggu. Klik tombol di bawah untuk melanjutkan ke unduhan.</p>
-    <a
-      id="finalLink"
-      href="#"
-      target="_blank"
-      rel="noopener noreferrer nofollow"
-      class="inline-flex items-center space-x-2 bg-green-600 hover:bg-green-700 active:bg-green-800 transition-colors rounded-md px-6 py-3 font-semibold tracking-wide text-black"
-    >
-      <i class="fas fa-download"></i>
-      <span>Unduh Sekarang</span>
-    </a>
-  </section>
-
-  <footer class="z-10 mt-16 text-green-600 text-xs font-mono tracking-widest select-text">
-    &copy; 2024 CyberSafe Link. All rights reserved.
-  </footer>
-
+   </div>
+   <audio id="hacker-sound" preload="auto" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg">
+   </audio>
+  </div>
+  <main class="hidden min-h-screen relative overflow-hidden bg-black text-green-400 px-4 py-8" id="main-content">
+   <!-- Background matrix code animation -->
+   <div aria-hidden="true" class="fixed inset-0 -z-10 overflow-hidden">
+    <matrixbackground>
+    </matrixbackground>
+   </div>
+   <header class="max-w-7xl mx-auto mb-12 text-center">
+    <h1 class="text-4xl md:text-6xl font-bold tracking-widest uppercase drop-shadow-[0_0_10px_rgba(0,255,0,0.7)]">
+     Cybercrime Dashboard
+    </h1>
+    <p class="mt-2 text-green-300 font-mono text-sm md:text-base">
+     Real-time cyber threat monitoring &amp; analytics
+    </p>
+   </header>
+   <section class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+    <!-- Circle with pulse -->
+    <div class="flex justify-center items-center">
+     <div aria-label="Cybersecurity threat level indicator circle with pulsing green glow" class="w-48 h-48 rounded-full border-4 border-green-500 flex flex-col justify-center items-center pulse-green relative" role="img">
+      <div class="text-6xl font-bold">
+       42%
+      </div>
+      <div class="text-green-300 uppercase tracking-widest mt-2 text-sm">
+       Threat Level
+      </div>
+      <img alt="Green glowing shield icon representing cybersecurity protection" class="absolute bottom-4 right-4 w-20 h-20 opacity-70" height="80" src="https://storage.googleapis.com/a1aa/image/2ff3f051-7e55-4c9b-54c6-0382dbcc0688.jpg" width="80"/>
+     </div>
+    </div>
+    <!-- Table with cybercrime data -->
+    <div class="col-span-1 md:col-span-2 overflow-x-auto rounded-lg border border-green-600 bg-black/70 shadow-lg shadow-green-900">
+     <table class="min-w-full text-green-400 font-mono text-sm md:text-base">
+      <thead class="bg-green-900/80 border-b border-green-600">
+       <tr>
+        <th class="px-4 py-3 text-left uppercase tracking-widest">
+         Date
+        </th>
+        <th class="px-4 py-3 text-left uppercase tracking-widest">
+         Attack Type
+        </th>
+        <th class="px-4 py-3 text-left uppercase tracking-widest">
+         Source IP
+        </th>
+        <th class="px-4 py-3 text-left uppercase tracking-widest">
+         Target
+        </th>
+        <th class="px-4 py-3 text-left uppercase tracking-widest">
+         Severity
+        </th>
+       </tr>
+      </thead>
+      <tbody>
+       <tr class="border-b border-green-700 hover:bg-green-900/20 transition-colors">
+        <td class="px-4 py-2">
+         2024-06-01 14:23
+        </td>
+        <td class="px-4 py-2">
+         DDoS
+        </td>
+        <td class="px-4 py-2">
+         192.168.1.101
+        </td>
+        <td class="px-4 py-2">
+         Web Server
+        </td>
+        <td class="px-4 py-2 text-red-500 font-bold">
+         High
+        </td>
+       </tr>
+       <tr class="border-b border-green-700 hover:bg-green-900/20 transition-colors">
+        <td class="px-4 py-2">
+         2024-06-01 13:45
+        </td>
+        <td class="px-4 py-2">
+         Phishing
+        </td>
+        <td class="px-4 py-2">
+         203.0.113.45
+        </td>
+        <td class="px-4 py-2">
+         Employee Email
+        </td>
+        <td class="px-4 py-2 text-yellow-400 font-semibold">
+         Medium
+        </td>
+       </tr>
+       <tr class="border-b border-green-700 hover:bg-green-900/20 transition-colors">
+        <td class="px-4 py-2">
+         2024-06-01 12:10
+        </td>
+        <td class="px-4 py-2">
+         Malware
+        </td>
+        <td class="px-4 py-2">
+         198.51.100.22
+        </td>
+        <td class="px-4 py-2">
+         Workstation 12
+        </td>
+        <td class="px-4 py-2 text-red-500 font-bold">
+         High
+        </td>
+       </tr>
+       <tr class="border-b border-green-700 hover:bg-green-900/20 transition-colors">
+        <td class="px-4 py-2">
+         2024-06-01 11:55
+        </td>
+        <td class="px-4 py-2">
+         SQL Injection
+        </td>
+        <td class="px-4 py-2">
+         172.16.0.5
+        </td>
+        <td class="px-4 py-2">
+         Database Server
+        </td>
+        <td class="px-4 py-2 text-red-500 font-bold">
+         High
+        </td>
+       </tr>
+       <tr class="border-b border-green-700 hover:bg-green-900/20 transition-colors">
+        <td class="px-4 py-2">
+         2024-06-01 10:30
+        </td>
+        <td class="px-4 py-2">
+         Brute Force
+        </td>
+        <td class="px-4 py-2">
+         10.0.0.99
+        </td>
+        <td class="px-4 py-2">
+         Admin Portal
+        </td>
+        <td class="px-4 py-2 text-yellow-400 font-semibold">
+         Medium
+        </td>
+       </tr>
+       <tr class="border-b border-green-700 hover:bg-green-900/20 transition-colors">
+        <td class="px-4 py-2">
+         2024-06-01 09:15
+        </td>
+        <td class="px-4 py-2">
+         Ransomware
+        </td>
+        <td class="px-4 py-2">
+         203.0.113.88
+        </td>
+        <td class="px-4 py-2">
+         File Server
+        </td>
+        <td class="px-4 py-2 text-red-500 font-bold">
+         High
+        </td>
+       </tr>
+       <tr class="border-b border-green-700 hover:bg-green-900/20 transition-colors">
+        <td class="px-4 py-2">
+         2024-06-01 08:50
+        </td>
+        <td class="px-4 py-2">
+         Spyware
+        </td>
+        <td class="px-4 py-2">
+         198.51.100.77
+        </td>
+        <td class="px-4 py-2">
+         Workstation 7
+        </td>
+        <td class="px-4 py-2 text-yellow-400 font-semibold">
+         Medium
+        </td>
+       </tr>
+       <tr class="border-b border-green-700 hover:bg-green-900/20 transition-colors">
+        <td class="px-4 py-2">
+         2024-06-01 07:40
+        </td>
+        <td class="px-4 py-2">
+         Cross-site Scripting
+        </td>
+        <td class="px-4 py-2">
+         172.16.0.12
+        </td>
+        <td class="px-4 py-2">
+         Web App
+        </td>
+        <td class="px-4 py-2 text-yellow-400 font-semibold">
+         Medium
+        </td>
+       </tr>
+       <tr class="border-b border-green-700 hover:bg-green-900/20 transition-colors">
+        <td class="px-4 py-2">
+         2024-06-01 06:25
+        </td>
+        <td class="px-4 py-2">
+         Man-in-the-Middle
+        </td>
+        <td class="px-4 py-2">
+         10.0.0.45
+        </td>
+        <td class="px-4 py-2">
+         VPN Gateway
+        </td>
+        <td class="px-4 py-2 text-red-500 font-bold">
+         High
+        </td>
+       </tr>
+       <tr class="border-b border-green-700 hover:bg-green-900/20 transition-colors">
+        <td class="px-4 py-2">
+         2024-06-01 05:10
+        </td>
+        <td class="px-4 py-2">
+         Credential Stuffing
+        </td>
+        <td class="px-4 py-2">
+         203.0.113.150
+        </td>
+        <td class="px-4 py-2">
+         User Accounts
+        </td>
+        <td class="px-4 py-2 text-yellow-400 font-semibold">
+         Medium
+        </td>
+       </tr>
+       <tr class="border-b border-green-700 hover:bg-green-900/20 transition-colors">
+        <td class="px-4 py-2">
+         2024-06-01 04:00
+        </td>
+        <td class="px-4 py-2">
+         Zero-day Exploit
+        </td>
+        <td class="px-4 py-2">
+         198.51.100.200
+        </td>
+        <td class="px-4 py-2">
+         Core Server
+        </td>
+        <td class="px-4 py-2 text-red-500 font-bold">
+         Critical
+        </td>
+       </tr>
+       <tr class="border-b border-green-700 hover:bg-green-900/20 transition-colors">
+        <td class="px-4 py-2">
+         2024-06-01 03:30
+        </td>
+        <td class="px-4 py-2">
+         Trojan
+        </td>
+        <td class="px-4 py-2">
+         172.16.0.33
+        </td>
+        <td class="px-4 py-2">
+         Workstation 3
+        </td>
+        <td class="px-4 py-2 text-yellow-400 font-semibold">
+         Medium
+        </td>
+       </tr>
+       <tr class="border-b border-green-700 hover:bg-green-900/20 transition-colors">
+        <td class="px-4 py-2">
+         2024-06-01 02:15
+        </td>
+        <td class="px-4 py-2">
+         Botnet
+        </td>
+        <td class="px-4 py-2">
+         10.0.0.77
+        </td>
+        <td class="px-4 py-2">
+         IoT Devices
+        </td>
+        <td class="px-4 py-2 text-yellow-400 font-semibold">
+         Medium
+        </td>
+       </tr>
+       <tr class="border-b border-green-700 hover:bg-green-900/20 transition-colors">
+        <td class="px-4 py-2">
+         2024-06-01 01:00
+        </td>
+        <td class="px-4 py-2">
+         Data Breach
+        </td>
+        <td class="px-4 py-2">
+         203.0.113.99
+        </td>
+        <td class="px-4 py-2">
+         Customer DB
+        </td>
+        <td class="px-4 py-2 text-red-500 font-bold">
+         Critical
+        </td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+   </section>
+  </main>
   <script>
-    (() => {
-      const form = document.getElementById('shortenForm');
-      const urlInput = document.getElementById('urlInput');
-      const resultSection = document.getElementById('resultSection');
-      const resultText = resultSection.querySelector('p');
-      const copyBtn = document.getElementById('copyBtn');
+   // Matrix background component
+    function MatrixBackground() {
+      const container = document.createElement('div');
+      container.className = 'w-full h-full flex flex-wrap items-start justify-start gap-1 p-2 opacity-30 select-none pointer-events-none';
 
-      const adSection = document.getElementById('adSection');
-      const adProgress = document.getElementById('adProgress');
-      const adTimer = document.getElementById('adTimer');
-      const skipBtn = document.getElementById('skipBtn');
+      const columns = 40;
+      const rows = 30;
+      const chars = '01';
 
-      const finalSection = document.getElementById('finalSection');
-      const finalLink = document.getElementById('finalLink');
-
-      // Simulated short link base URL (in real app, this would be your domain)
-      const baseShortUrl = window.location.origin + '/s/';
-
-      // Store shortened links in-memory (simulate DB)
-      const linkStore = {};
-
-      // Generate a random 6-character alphanumeric code
-      function generateCode() {
-        const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        let code = '';
-        for (let i = 0; i < 6; i++) {
-          code += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return code;
+      for (let i = 0; i < columns * rows; i++) {
+        const span = document.createElement('span');
+        span.className = 'matrix-code';
+        span.textContent = chars[Math.floor(Math.random() * chars.length)];
+        container.appendChild(span);
       }
 
-      // Create a short link and store original URL
-      function createShortLink(originalUrl) {
-        let code;
-        do {
-          code = generateCode();
-        } while (linkStore[code]);
-        linkStore[code] = originalUrl;
-        return baseShortUrl + code;
-      }
-
-      // Copy to clipboard helper
-      function copyToClipboard(text) {
-        if (navigator.clipboard) {
-          navigator.clipboard.writeText(text);
-        } else {
-          const textarea = document.createElement('textarea');
-          textarea.value = text;
-          document.body.appendChild(textarea);
-          textarea.select();
-          document.execCommand('copy');
-          document.body.removeChild(textarea);
-        }
-      }
-
-      // Show ad screen and start countdown
-      function showAdScreen(shortCode) {
-        adSection.classList.remove('hidden');
-        let duration = 5; // seconds
-        adProgress.style.width = '0%';
-        adTimer.textContent = `${duration} detik tersisa`;
-        skipBtn.disabled = true;
-
-        let elapsed = 0;
-        const interval = setInterval(() => {
-          elapsed++;
-          const percent = (elapsed / duration) * 100;
-          adProgress.style.width = percent + '%';
-          const left = duration - elapsed;
-          adTimer.textContent = `${left} detik tersisa`;
-          if (elapsed >= duration) {
-            clearInterval(interval);
-            skipBtn.disabled = false;
-            adTimer.textContent = 'Iklan selesai, Anda dapat melewati iklan.';
+      // Animate the matrix code by changing characters randomly
+      setInterval(() => {
+        const spans = container.children;
+        for (let i = 0; i < spans.length; i++) {
+          if (Math.random() < 0.05) {
+            spans[i].textContent = chars[Math.floor(Math.random() * chars.length)];
           }
-        }, 1000);
+        }
+      }, 100);
 
-        skipBtn.onclick = () => {
+      return container;
+    }
+
+    // Append matrix background to the fixed container
+    document.querySelector('div[aria-hidden="true"]').appendChild(MatrixBackground());
+
+    // Animation screen logic
+    const animationScreen = document.getElementById('animation-screen');
+    const progressBar = document.getElementById('progress-bar');
+    const hackerSound = document.getElementById('hacker-sound');
+    const mainContent = document.getElementById('main-content');
+
+    // Play sound and animate progress bar on click anywhere on animation screen
+    animationScreen.addEventListener('click', () => {
+      if (animationScreen.classList.contains('hidden')) return;
+
+      hackerSound.currentTime = 0;
+      hackerSound.play();
+
+      let progress = 0;
+      const duration = 5000; // 5 seconds animation
+      const intervalTime = 50;
+      const increment = (intervalTime / duration) * 100;
+
+      const interval = setInterval(() => {
+        progress += increment;
+        if (progress > 100) progress = 100;
+        progressBar.style.width = progress + '%';
+
+        if (progress >= 100) {
           clearInterval(interval);
-          adSection.classList.add('hidden');
-          showFinalScreen(shortCode);
-        };
-      }
-
-      // Show final screen with real link
-      function showFinalScreen(shortCode) {
-        finalSection.classList.remove('hidden');
-        finalLink.href = linkStore[shortCode] || '#';
-      }
-
-      // Hide all overlays
-      function hideAllOverlays() {
-        adSection.classList.add('hidden');
-        finalSection.classList.add('hidden');
-      }
-
-      // Handle form submit
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        hideAllOverlays();
-
-        const originalUrl = urlInput.value.trim();
-        if (!originalUrl) return;
-
-        // Create short link
-        const shortLink = createShortLink(originalUrl);
-
-        // Show short link to user
-        resultText.textContent = shortLink;
-        resultSection.classList.remove('hidden');
-
-        // On click short link, simulate redirect with ads
-        resultText.onclick = () => {
-          // Extract code from short link
-          const code = shortLink.split('/').pop();
-          // Show ad screen
-          adSection.classList.remove('hidden');
-          finalSection.classList.add('hidden');
-          showAdScreen(code);
-        };
-      });
-
-      // Copy button
-      copyBtn.addEventListener('click', () => {
-        if (resultText.textContent) {
-          copyToClipboard(resultText.textContent);
-          copyBtn.textContent = 'Tersalin!';
-          setTimeout(() => {
-            copyBtn.innerHTML = '<i class="fas fa-copy mr-2"></i> Salin Link';
-          }, 2000);
+          animationScreen.classList.add('hidden');
+          mainContent.classList.remove('hidden');
+          document.body.style.overflow = 'auto';
         }
-      });
+      }, intervalTime);
+    });
 
-      // Clicking final link closes overlay after opening
-      finalLink.addEventListener('click', () => {
-        finalSection.classList.add('hidden');
-      });
-
-      // Clicking outside overlays closes them
-      [adSection, finalSection].forEach((section) => {
-        section.addEventListener('click', (e) => {
-          if (e.target === section) {
-            section.classList.add('hidden');
-          }
-        });
-      });
-    })();
+    // On load, show a blinking cursor effect on the text
+    const animationText = document.getElementById('animation-text');
+    let cursorVisible = true;
+    setInterval(() => {
+      animationText.textContent = cursorVisible
+        ? 'Initiating Cybercrime Hack Protocol... _'
+        : 'Initiating Cybercrime Hack Protocol...';
+      cursorVisible = !cursorVisible;
+    }, 600);
   </script>
-</body>
-    </html>
+ </body>
+</html>
