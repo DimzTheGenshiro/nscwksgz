@@ -3,340 +3,234 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1" name="viewport"/>
   <title>
-   التشهير بواسطة ديماس
+   Banned Saluran WhatsApp Hacker Style
   </title>
   <script src="https://cdn.tailwindcss.com">
   </script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&amp;display=swap" rel="stylesheet"/>
   <style>
    body {
-      font-family: 'Roboto Mono', monospace;
-      background-color: #0f172a;
-      color: #e0e0e0;
-      margin: 0;
-      min-height: 100vh;
-      overflow-x: hidden;
-      position: relative;
-      background: black;
+    font-family: "Share Tech Mono", monospace;
+    background-color: #0f0f0f;
+    color: #00ff00;
+  }
+  ::selection {
+    background: #00ff00;
+    color: #0f0f0f;
+  }
+  /* Flicker animation for hacker vibe */
+  @keyframes flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+      opacity: 1;
     }
-    /* Matrix rain effect */
-    #matrixCanvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 0;
-      pointer-events: none;
-      background: black;
+    20%, 22%, 24%, 55% {
+      opacity: 0.4;
     }
-    /* Custom scrollbar for terminal */
-    .terminal::-webkit-scrollbar {
-      width: 8px;
+  }
+  .flicker {
+    animation: flicker 1.5s infinite;
+  }
+  /* Pop-up animation */
+  @keyframes popup {
+    0% {
+      opacity: 0;
+      transform: scale(0.7) translateY(20px);
     }
-    .terminal::-webkit-scrollbar-track {
-      background: #1e293b;
+    50% {
+      opacity: 1;
+      transform: scale(1.05) translateY(0);
     }
-    .terminal::-webkit-scrollbar-thumb {
-      background-color: #16a34a;
-      border-radius: 10px;
-      border: 2px solid #1e293b;
+    100% {
+      opacity: 1;
+      transform: scale(1) translateY(0);
     }
-    /* Slow spin animation for hacker image */
-    @keyframes spin-slow {
-      0% { transform: rotate(0deg);}
-      100% { transform: rotate(360deg);}
-    }
-    .animate-spin-slow {
-      animation: spin-slow 8s linear infinite;
-    }
+  }
+  .popup {
+    animation: popup 0.4s ease forwards;
+  }
+  /* Glowing button */
+  .btn-glow {
+    box-shadow:
+      0 0 5px #00ff00,
+      0 0 10px #00ff00,
+      0 0 20px #00ff00,
+      0 0 40px #00ff00;
+  }
+  /* Input and select styling for hacker theme */
+  input,
+  select,
+  textarea {
+    background-color: #111;
+    border: 1px solid #00ff00;
+    color: #00ff00;
+  }
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: #0f0;
+    box-shadow: 0 0 8px #0f0;
+    background-color: #121;
+  }
+  /* Scrollbar for hacker theme */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0f0f0f;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #00ff00;
+    border-radius: 4px;
+  }
+  /* Container border with glitch effect */
+  .glitch-border {
+    border: 2px solid #00ff00;
+    box-shadow:
+      0 0 5px #00ff00,
+      0 0 10px #00ff00,
+      0 0 20px #00ff00;
+  }
   </style>
  </head>
- <body class="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
-  <canvas id="matrixCanvas">
-  </canvas>
-  <div class="max-w-xl w-full bg-gray-900 bg-opacity-90 rounded-lg shadow-lg p-6 relative z-10">
-   <h1 class="text-3xl font-bold text-center mb-6 text-green-400 tracking-widest">
-    التشهير بواسطة ديماس
-   </h1>
-   <form autocomplete="off" class="flex flex-col space-y-4" id="doxForm" spellcheck="false">
-    <label class="text-lg font-semibold text-gray-300 tracking-wide" for="phone">
-     أدخل رقم الهاتف المحمول (مثال: +1(111)111111)
-    </label>
-    <input aria-label="Masukkan nomor ponsel" class="px-4 py-3 rounded-md bg-gray-900 border border-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 text-green-300 text-lg font-mono tracking-wide" id="phone" name="phone" pattern="62[0-9]{8,14}" placeholder="628xxxxxxxxxx" required="" type="tel"/>
-    <button aria-label="Mulai proses doxing" class="bg-green-600 hover:bg-green-700 transition-colors rounded-md py-3 font-semibold text-lg text-black flex items-center justify-center space-x-2 tracking-wide" type="submit">
-     <i class="fas fa-terminal">
-     </i>
-     <span>
-      Mulai Proses
-     </span>
-    </button>
-   </form>
-   <div aria-live="polite" class="mt-8 hidden flex-col items-center space-y-4" id="processSection">
-    <div aria-label="Animasi proses hacker" class="w-full h-48 bg-black rounded-md border border-green-600 relative overflow-hidden flex items-center justify-center" id="animationContainer" role="region">
-     <img alt="Animasi hacker cybercrime berupa gambar PNG hacker dengan hoodie dan wajah samar tanpa latar belakang transparan, efek neon hijau" class="absolute w-36 h-36 animate-spin-slow" height="144" id="hackerAnimation" src="https://storage.googleapis.com/a1aa/image/75cc8aa6-cadf-46bd-2d63-6c8f9bb2189a.jpg" width="144"/>
-     <pre aria-atomic="true" aria-live="polite" class="terminal relative z-10 w-full h-full p-4 text-green-400 font-mono text-sm overflow-y-auto select-text" id="terminalOutput" tabindex="0"></pre>
+ <body class="flex flex-col min-h-screen">
+  <header class="bg-black border-b border-green-600">
+   <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+    <div class="flex items-center space-x-3 flicker">
+     <img alt="Ikon hacker hijau neon bergaya digital" class="w-10 h-10" height="40" src="https://storage.googleapis.com/a1aa/image/ea9f635c-f1e5-4392-1cfa-291389635f93.jpg" width="40"/>
+     <h1 class="text-3xl font-bold tracking-widest uppercase select-none">
+      WHATSAPP CHANNEL BANNED
+     </h1>
     </div>
-    <audio id="hackerSound" preload="auto" src="https://actions.google.com/sounds/v1/alarms/hacking.ogg">
-    </audio>
    </div>
-   <div aria-label="Hasil data doxing nomor HP" aria-live="polite" class="mt-8 hidden bg-gray-900 bg-opacity-90 rounded-md p-6 space-y-6 border border-green-600" id="resultSection" role="region">
-    <h2 class="text-2xl font-bold text-green-400 text-center mb-4 tracking-wide">
-     بيانات Doxing لرقم الهاتف المحمول
+  </header>
+  <main class="flex-grow container mx-auto px-4 py-10 max-w-lg">
+   <section class="bg-black glitch-border rounded-lg shadow-lg p-6 relative overflow-hidden">
+    <h2 class="text-2xl font-bold mb-6 text-center text-green-400 flicker uppercase tracking-widest">
+     Masukkan Link Saluran WhatsApp
     </h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-     <div class="flex items-center space-x-4">
-      <i aria-hidden="true" class="fas fa-user text-green-400 text-3xl">
-      </i>
-      <div>
-       <h3 class="font-semibold text-gray-300 tracking-wide">
-        الاسم الأصلي
-       </h3>
-       <p class="text-green-300 text-lg font-mono" id="realName" tabindex="0">
-        -
-       </p>
-      </div>
+    <form class="space-y-6" id="reportForm" novalidate="">
+     <div>
+      <label class="block text-green-400 font-semibold mb-2 tracking-wide" for="channelLink">
+       Link Saluran WhatsApp
+      </label>
+      <input autocomplete="off" class="w-full px-4 py-3 rounded-md transition" id="channelLink" name="channelLink" pattern="https://chat\.whatsapp\.com/[A-Za-z0-9]{20,}" placeholder="https://chat.whatsapp.com/xxxxxxxxxxxxxxxxxxxxxx" required="" spellcheck="false" title="Masukkan link saluran WhatsApp yang valid, contoh: https://chat.whatsapp.com/xxxxxxxxxxxxxxxxxxxxxx" type="url"/>
      </div>
-     <div class="flex items-center space-x-4">
-      <i aria-hidden="true" class="fas fa-map-marker-alt text-green-400 text-3xl">
-      </i>
-      <div>
-       <h3 class="font-semibold text-gray-300 tracking-wide">
-        Lokasi
-       </h3>
-       <p class="text-green-300 text-lg font-mono" id="location" tabindex="0">
-        -
-       </p>
-      </div>
+     <div>
+      <label class="block text-green-400 font-semibold mb-2 tracking-wide" for="reason">
+       Alasan Pelaporan
+      </label>
+      <select autocomplete="off" class="w-full px-4 py-3 rounded-md transition" id="reason" name="reason" required="">
+       <option disabled="" selected="" value="">
+        Pilih alasan pelaporan
+       </option>
+       <option value="spam">
+        Spam atau Konten Tidak Diinginkan
+       </option>
+       <option value="hate_speech">
+        Ujaran Kebencian
+       </option>
+       <option value="harassment">
+        Pelecehan atau Intimidasi
+       </option>
+       <option value="illegal_content">
+        Konten Ilegal
+       </option>
+       <option value="other">
+        Lainnya
+       </option>
+      </select>
      </div>
-     <div class="flex items-center space-x-4">
-      <i aria-hidden="true" class="fas fa-home text-green-400 text-3xl">
-      </i>
-      <div>
-       <h3 class="font-semibold text-gray-300 tracking-wide">
-        Alamat
-       </h3>
-       <p class="text-green-300 text-lg font-mono" id="address" tabindex="0">
-        -
-       </p>
-      </div>
+     <div>
+      <label class="block text-green-400 font-semibold mb-2 tracking-wide" for="details">
+       Detail Tambahan (Opsional)
+      </label>
+      <textarea autocomplete="off" class="w-full px-4 py-3 rounded-md transition resize-none" id="details" name="details" placeholder="Jelaskan secara singkat alasan pelaporan..." rows="3" spellcheck="false"></textarea>
      </div>
-     <div class="flex items-center space-x-4">
-      <i aria-hidden="true" class="fas fa-sim-card text-green-400 text-3xl">
+     <button class="w-full bg-green-600 hover:bg-green-700 text-black font-bold py-3 rounded-md transition flex items-center justify-center space-x-2 btn-glow disabled:opacity-50 disabled:cursor-not-allowed" id="submitButton" type="submit">
+      <i class="fas fa-skull-crossbones">
       </i>
-      <div>
-       <h3 class="font-semibold text-gray-300 tracking-wide">
-        Tipe Kartu
-       </h3>
-       <p class="text-green-300 text-lg font-mono" id="cardType" tabindex="0">
-        -
-       </p>
-      </div>
-     </div>
-     <div class="flex items-center space-x-4">
-      <i aria-hidden="true" class="fas fa-signal text-green-400 text-3xl">
-      </i>
-      <div>
-       <h3 class="font-semibold text-gray-300 tracking-wide">
-        Tipe Jaringan
-       </h3>
-       <p class="text-green-300 text-lg font-mono" id="networkType" tabindex="0">
-        -
-       </p>
-      </div>
-     </div>
-     <div class="flex items-center space-x-4">
-      <i aria-hidden="true" class="fas fa-birthday-cake text-green-400 text-3xl">
-      </i>
-      <div>
-       <h3 class="font-semibold text-gray-300 tracking-wide">
-        Umur
-       </h3>
-       <p class="text-green-300 text-lg font-mono" id="age" tabindex="0">
-        -
-       </p>
-      </div>
-     </div>
-    </div>
+      <span>
+       Laporkan &amp; Banned
+      </span>
+     </button>
+    </form>
+   </section>
+  </main>
+  <!-- Popup container -->
+  <div aria-atomic="true" aria-live="assertive" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black border-2 border-green-400 text-green-400 px-8 py-6 rounded-lg shadow-lg opacity-0 pointer-events-none z-50 select-none" id="popup" role="alert">
+   <div class="flex items-center space-x-3">
+    <i class="fas fa-check-circle text-3xl">
+    </i>
+    <p class="text-lg font-semibold tracking-wide">
+     Laporan Berhasil Dikirim!
+    </p>
    </div>
   </div>
+  <footer class="bg-black border-t border-green-600 py-4 mt-auto">
+   <div class="container mx-auto px-4 text-center text-green-600 text-xs uppercase tracking-widest select-none">
+    © 2024 WHATSAPP CHANNEL BANNED - HACKER STYLE
+   </div>
+  </footer>
   <script>
-   // Matrix rain effect
-    const canvas = document.getElementById('matrixCanvas');
-    const ctx = canvas.getContext('2d');
+   const form = document.getElementById("reportForm");
+   const popup = document.getElementById("popup");
+   const submitButton = document.getElementById("submitButton");
 
-    let width = window.innerWidth;
-    let height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
+   form.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-    const letters = '01';
-    const fontSize = 16;
-    const columns = Math.floor(width / fontSize);
-    const drops = [];
+    // Clear any previous messages
+    popup.classList.remove("popup");
+    popup.style.opacity = "0";
+    popup.style.pointerEvents = "none";
 
-    for (let x = 0; x < columns; x++) {
-      drops[x] = Math.random() * height;
+    const channelLink = form.channelLink.value.trim();
+    const reason = form.reason.value;
+    const details = form.details.value.trim();
+
+    const waLinkRegex = /^https:\/\/chat\.whatsapp\.com\/[A-Za-z0-9]{20,}$/;
+
+    if (!waLinkRegex.test(channelLink)) {
+     alert("Link saluran WhatsApp tidak valid. Pastikan formatnya benar.");
+     return;
+    }
+    if (!reason) {
+     alert("Silakan pilih alasan pelaporan.");
+     return;
     }
 
-    function draw() {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-      ctx.fillRect(0, 0, width, height);
+    submitButton.disabled = true;
+    submitButton.querySelector("span").textContent = "Mengirim laporan...";
 
-      ctx.fillStyle = '#16a34a'; // green color
-      ctx.font = fontSize + 'px monospace';
+    try {
+     // Simulasi delay pengiriman laporan
+     await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      for (let i = 0; i < drops.length; i++) {
-        const text = letters.charAt(Math.floor(Math.random() * letters.length));
-        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+     // Simulasi respons sukses
+     // Tampilkan popup animasi
+     popup.classList.add("popup");
+     popup.style.opacity = "1";
+     popup.style.pointerEvents = "auto";
 
-        if (drops[i] * fontSize > height && Math.random() > 0.975) {
-          drops[i] = 0;
-        }
-        drops[i]++;
-      }
+     // Reset form
+     form.reset();
+    } catch (error) {
+     alert(
+      "Terjadi kesalahan jaringan atau server. Silakan coba lagi nanti."
+     );
+    } finally {
+     submitButton.disabled = false;
+     submitButton.querySelector("span").textContent = "Laporkan & Banned";
+     // Sembunyikan popup setelah 3 detik
+     setTimeout(() => {
+      popup.classList.remove("popup");
+      popup.style.opacity = "0";
+      popup.style.pointerEvents = "none";
+     }, 3000);
     }
-
-    let matrixInterval = setInterval(draw, 50);
-
-    window.addEventListener('resize', () => {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
-    });
-
-    // Slow spin animation for hacker image is handled by CSS
-
-    const form = document.getElementById('doxForm');
-    const processSection = document.getElementById('processSection');
-    const resultSection = document.getElementById('resultSection');
-    const terminalOutput = document.getElementById('terminalOutput');
-    const hackerSound = document.getElementById('hackerSound');
-
-    // Sample fake data generator based on phone number
-    function generateFakeData(phone) {
-      function hashCode(str) {
-        let hash = 0;
-        for (let i = 0; i < str.length; i++) {
-          hash = str.charCodeAt(i) + ((hash << 5) - hash);
-          hash = hash & hash;
-        }
-        return Math.abs(hash);
-      }
-
-      const hash = hashCode(phone);
-
-      const names = [
-        'Andi Wijaya',
-        'Siti Nurhaliza',
-        'Budi Santoso',
-        'Dewi Lestari',
-        'Rizky Pratama',
-        'Lina Marlina',
-        'Agus Setiawan',
-        'Maya Sari',
-        'Fajar Nugroho',
-        'Nina Kurniawati',
-      ];
-
-      const locations = [
-        'Jakarta Selatan, DKI Jakarta',
-        'Bandung, Jawa Barat',
-        'Surabaya, Jawa Timur',
-        'Medan, Sumatera Utara',
-        'Denpasar, Bali',
-        'Yogyakarta, DI Yogyakarta',
-        'Makassar, Sulawesi Selatan',
-        'Semarang, Jawa Tengah',
-        'Palembang, Sumatera Selatan',
-        'Balikpapan, Kalimantan Timur',
-      ];
-
-      const addresses = [
-        'Jl. Merdeka No. 45',
-        'Jl. Sudirman No. 12',
-        'Jl. Diponegoro No. 78',
-        'Jl. Gatot Subroto No. 33',
-        'Jl. Ahmad Yani No. 99',
-        'Jl. Pahlawan No. 21',
-        'Jl. Sultan Hasanuddin No. 7',
-        'Jl. Teuku Umar No. 56',
-        'Jl. Imam Bonjol No. 88',
-        'Jl. Raden Saleh No. 14',
-      ];
-
-      const cardTypes = ['Telkomsel', 'Indosat', 'XL Axiata', 'Tri (3)', 'Smartfren'];
-
-      const networkTypes = ['4G LTE', '3G', '5G', '2G'];
-
-      const ages = Array.from({ length: 60 }, (_, i) => i + 18);
-
-      return {
-        realName: names[hash % names.length],
-        location: locations[hash % locations.length],
-        address: addresses[hash % addresses.length],
-        cardType: cardTypes[hash % cardTypes.length],
-        networkType: networkTypes[hash % networkTypes.length],
-        age: ages[hash % ages.length] + ' tahun',
-      };
-    }
-
-    const terminalLines = [
-      'Mengecek nomor ponsel...',
-      'Menghubungkan ke server operator...',
-      'Mendapatkan data lokasi...',
-      'Mendapatkan data identitas...',
-      'Mendapatkan data alamat...',
-      'Mengecek tipe kartu SIM...',
-      'Mengecek tipe jaringan...',
-      'Menghitung umur pengguna...',
-      'Menyusun laporan...',
-      'Proses selesai.',
-    ];
-
-    function sleep(ms) {
-      return new Promise((resolve) => setTimeout(resolve, ms));
-    }
-
-    async function runProcess(phone) {
-      terminalOutput.textContent = '';
-      processSection.classList.remove('hidden');
-      resultSection.classList.add('hidden');
-
-      hackerSound.currentTime = 0;
-      hackerSound.play();
-
-      for (let i = 0; i < terminalLines.length; i++) {
-        terminalOutput.textContent += terminalLines[i] + '\n';
-        terminalOutput.scrollTop = terminalOutput.scrollHeight;
-        await sleep(1200);
-      }
-
-      hackerSound.pause();
-
-      const data = generateFakeData(phone);
-
-      document.getElementById('realName').textContent = data.realName;
-      document.getElementById('location').textContent = data.location;
-      document.getElementById('address').textContent = data.address;
-      document.getElementById('cardType').textContent = data.cardType;
-      document.getElementById('networkType').textContent = data.networkType;
-      document.getElementById('age').textContent = data.age;
-
-      resultSection.classList.remove('hidden');
-    }
-
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const phone = form.phone.value.trim();
-      if (!/^62[0-9]{8,14}$/.test(phone)) {
-        alert('Nomor ponsel harus diawali dengan 62 dan memiliki 10-16 digit angka.');
-        return;
-      }
-      runProcess(phone);
-    });
+   });
   </script>
  </body>
 </html>
