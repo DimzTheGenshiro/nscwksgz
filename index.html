@@ -1,202 +1,152 @@
-<html class="scroll-smooth" lang="id">
- <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1" name="viewport"/>
-  <title>
-  WhatsApp Support
-  </title>
-  <script src="https://cdn.tailwindcss.com">
-  </script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Image Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+    rel="stylesheet"
+  />
   <style>
-   body {
-      font-family: 'Orbitron', sans-serif;
-      background-color: #0f172a; /* dark navy */
-      color: #cbd5e1; /* light slate */
-    }
-    /* Spinner animation */
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-    /* Neon glow effect */
-    .neon-text {
-      color: #00ffea;
-      text-shadow:
-        0 0 5px #00ffea,
-        0 0 10px #00ffea,
-        0 0 20px #00ffea,
-        0 0 40px #00ffea;
-    }
-    .neon-button {
-      background-color: #00ffea;
-      color: #0f172a;
-      box-shadow:
-        0 0 5px #00ffea,
-        0 0 10px #00ffea,
-        0 0 20px #00ffea,
-        0 0 40px #00ffea;
-      transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    }
-    .neon-button:hover {
-      background-color: #00d8cc;
-      box-shadow:
-        0 0 10px #00d8cc,
-        0 0 20px #00d8cc,
-        0 0 30px #00d8cc,
-        0 0 50px #00d8cc;
-    }
-    /* Input and select neon focus */
-    input:focus, select:focus {
-      outline: none;
-      box-shadow:
-        0 0 8px #00ffea,
-        0 0 15px #00ffea;
-      border-color: #00ffea;
-      background-color: #071014;
-      color: #00ffea;
-    }
-    /* Scrollbar styling for dark theme */
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #0f172a;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #00ffea;
-      border-radius: 4px;
+    body {
+      font-family: 'Inter', sans-serif;
     }
   </style>
- </head>
- <body class="min-h-screen flex items-center justify-center p-4">
-  <div aria-label="Aplikasi laporan banned nomor WhatsApp tema cybercrime" class="w-full max-w-md bg-[#121b2a] rounded-lg shadow-[0_0_15px_#00ffea] p-6" id="app" role="main">
-   <!-- Animations container -->
-   <div aria-busy="true" aria-live="polite" class="flex flex-col items-center justify-center space-y-6" id="animation-container">
-    <!-- First animation: cyber style bouncing WhatsApp icon -->
-    <img alt="Ikon WhatsApp hijau neon bergaya cyberpunk dengan efek glowing dan animasi bouncing di latar belakang gelap" class="w-24 h-24 animate-bounce" height="100" id="whatsapp-icon" src="https://storage.googleapis.com/a1aa/image/c72bfa3d-416a-4637-dfd9-a039bf0f7646.jpg" width="100"/>
-    <h1 class="text-3xl font-extrabold neon-text tracking-widest select-none">
-    WhatsApp Support
-    </h1>
-   </div>
-   <!-- Loading animation container (hidden initially) -->
-   <div aria-busy="true" aria-live="polite" class="hidden flex flex-col items-center justify-center space-y-4" id="loading-container">
-    <div aria-label="Loading spinner" class="w-12 h-12 border-4 border-[#00ffea] border-t-transparent rounded-full animate-spin">
-    </div>
-    <p class="text-[#00ffea] font-semibold tracking-wide">
-     Memproses data... Mohon tunggu
-    </p>
-   </div>
-   <!-- Main form container (hidden initially) -->
-   <form aria-label="Form laporan banned nomor WhatsApp" autocomplete="off" class="hidden flex flex-col space-y-6" id="main-form" novalidate="">
-    <h2 class="text-2xl font-bold neon-text text-center select-none tracking-wide">
-     Kirim Laporan
-    </h2>
-    <label class="block text-[#00ffea] font-semibold tracking-wide" for="phone">
-     Nomor (format internasional tanpa tanda +, contoh: 6281234567890)
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col items-center p-4">
+  <h1 class="text-3xl font-semibold mb-6 text-center text-gray-800">
+    AI Image Generator
+  </h1>
+
+  <div class="w-full max-w-xl bg-white rounded-lg shadow-md p-6 flex flex-col space-y-6">
+    <label for="prompt" class="text-gray-700 font-medium">
+      Masukkan teks gambar yang ingin kamu buat:
     </label>
-    <input aria-describedby="phone-desc" aria-required="true" class="w-full px-4 py-2 rounded-md border border-[#00ffea] bg-[#071014] placeholder-[#004d4a] focus:ring-0 focus:border-[#00ffea] text-[#00ffea]" id="phone" name="phone" pattern="^\d{8,15}$" placeholder="Masukkan nomor WhatsApp target" required="" type="tel"/>
-    <p class="text-xs text-[#004d4a]" id="phone-desc">
-     Hanya angka, tanpa spasi atau simbol.
-    </p>
-    <label class="block text-[#00ffea] font-semibold tracking-wide" for="reason">
-     Pilih Status Laporan
-    </label>
-    <select aria-required="true" class="w-full px-4 py-2 rounded-md border border-[#00ffea] bg-[#071014] text-[#00ffea] focus:ring-0 focus:border-[#00ffea]" id="reason" name="reason" required="">
-     <option disabled="" selected="" value="">
-      Pilih alasan banned/unbanned
-     </option>
-     <option value="Banned">
-      Banned - Pelanggaran Keamanan dan Penyalahgunaan
-     </option>
-     <option value="Unbanned">
-      Unbanned - Permohonan Pemulihan Akun Resmi
-     </option>
-    </select>
-    <button aria-label="Kirim laporan ke android@whatsapp.support" class="w-full neon-button font-extrabold py-3 rounded-md flex items-center justify-center space-x-3 tracking-wide" type="submit">
-     <i class="fas fa-paper-plane text-[#0f172a] text-lg">
-     </i>
-     <span class="text-[#0f172a] text-lg">
-      Kirim Laporan
-     </span>
+    <textarea
+      id="prompt"
+      rows="3"
+      placeholder="Contoh: buatkan saya gambar seorang anak remaja sedang bermain komputer"
+      class="w-full border border-gray-300 rounded-md p-3 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
+    ></textarea>
+
+    <button
+      id="generateBtn"
+      class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-md flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      <i class="fas fa-magic mr-2"></i> Buat
     </button>
-   </form>
+
+    <div
+      id="loading"
+      class="hidden justify-center items-center space-x-3 text-indigo-600"
+      aria-live="polite"
+    >
+      <svg
+        class="animate-spin h-6 w-6 text-indigo-600"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          class="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          stroke-width="4"
+        ></circle>
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+        ></path>
+      </svg>
+      <span>Loading...</span>
+    </div>
+
+    <div
+      id="resultContainer"
+      class="hidden flex flex-col items-center space-y-4"
+    >
+      <img
+        id="resultImage"
+        src=""
+        alt="Gambar hasil AI sesuai dengan deskripsi yang dimasukkan"
+        class="rounded-md max-w-full max-h-96 shadow-lg"
+      />
+      <button
+        id="downloadBtn"
+        class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-md flex items-center space-x-2"
+      >
+        <i class="fas fa-download"></i>
+        <span>Download</span>
+      </button>
+    </div>
   </div>
+
   <script>
-   const animationContainer = document.getElementById('animation-container');
-    const loadingContainer = document.getElementById('loading-container');
-    const mainForm = document.getElementById('main-form');
+    const generateBtn = document.getElementById('generateBtn');
+    const loading = document.getElementById('loading');
+    const resultContainer = document.getElementById('resultContainer');
+    const resultImage = document.getElementById('resultImage');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const promptInput = document.getElementById('prompt');
 
-    // Step 1: Show first animation for 3 seconds
-    setTimeout(() => {
-      animationContainer.classList.add('hidden');
-      loadingContainer.classList.remove('hidden');
+    // Simulate AI image generation with placeholder images from placehold.co
+    // In real app, you would call an AI image generation API here.
 
-      // Step 2: Show loading animation for ~5 seconds
+    function generateImageUrl(prompt) {
+      // Create a URL with the prompt text embedded for alt text and image text
+      // Using placehold.co with text param to simulate image with text
+      // Max 60 chars for text param to keep image neat
+      const text = encodeURIComponent(prompt.slice(0, 60));
+      // 600x400 size, light gray background, dark text
+      return `https://placehold.co/600x400/ddd/333?text=${text}`;
+    }
+
+    generateBtn.addEventListener('click', () => {
+      const prompt = promptInput.value.trim();
+      if (!prompt) {
+        alert('Mohon masukkan deskripsi gambar terlebih dahulu.');
+        return;
+      }
+
+      // Disable button and hide previous results
+      generateBtn.disabled = true;
+      resultContainer.classList.add('hidden');
+      loading.classList.remove('hidden');
+
+      // Simulate loading for 3 seconds
       setTimeout(() => {
-        loadingContainer.classList.add('hidden');
-        mainForm.classList.remove('hidden');
-        mainForm.phone.focus();
-      }, 5000);
-    }, 3000);
+        const imageUrl = generateImageUrl(prompt);
+        resultImage.src = imageUrl;
+        resultImage.alt = `Gambar AI yang dihasilkan berdasarkan deskripsi: ${prompt}`;
+        loading.classList.add('hidden');
+        resultContainer.classList.remove('hidden');
+        generateBtn.disabled = false;
+      }, 3000);
+    });
 
-    // Form submission handler
-    mainForm.addEventListener('submit', (e) => {
-      e.preventDefault();
+    downloadBtn.addEventListener('click', () => {
+      const imageUrl = resultImage.src;
+      if (!imageUrl) return;
 
-      const phoneInput = mainForm.phone.value.trim();
-      const reasonInput = mainForm.reason.value;
-
-      // Validate phone number: only digits, length 8-15
-      const phoneRegex = /^\d{8,15}$/;
-      if (!phoneRegex.test(phoneInput)) {
-        alert(
-          'Nomor tidak valid. Masukkan nomor dengan 8 sampai 15 digit tanpa spasi atau tanda lain.'
-        );
-        mainForm.phone.focus();
-        return;
-      }
-
-      if (!reasonInput) {
-        alert('Silakan pilih alasan banned atau unbanned.');
-        mainForm.reason.focus();
-        return;
-      }
-
-      // Compose email body with convincing cybercrime style text
-      let bodyText = '';
-      if (reasonInput === 'Banned') {
-        bodyText =
-          `Laporan Pelanggaran Keamanan WhatsApp\n\n` +
-          `Nomor Target: +${phoneInput}\n` +
-          `Status: BANNED\n\n` +
-          `Deskripsi:\n` +
-          `Nomor ini diduga melakukan aktivitas yang melanggar kebijakan keamanan WhatsApp, termasuk namun tidak terbatas pada penyebaran malware, phishing, spam berbahaya, atau tindakan cybercrime lainnya yang membahayakan pengguna lain dan integritas platform.\n\n` +
-          `Mohon segera lakukan tindakan pemblokiran permanen terhadap nomor ini untuk menjaga keamanan dan kenyamanan komunitas WhatsApp.\n\n` +
-          `Terima kasih atas perhatian dan kerjasamanya.`;
-      } else if (reasonInput === 'Unbanned') {
-        bodyText =
-          `Permohonan Pemulihan Akun WhatsApp\n\n` +
-          `Nomor Target: +${phoneInput}\n` +
-          `Status: UNBANNED\n\n` +
-          `Deskripsi:\n` +
-          `Nomor ini sebelumnya diblokir, namun kami meyakini bahwa pemblokiran tersebut merupakan kesalahan atau telah terjadi pemulihan dari pelanggaran. Kami memohon agar akun ini dapat dipertimbangkan untuk dibuka kembali dengan catatan bahwa pengguna akan mematuhi semua kebijakan keamanan dan ketentuan layanan WhatsApp.\n\n` +
-          `Mohon proses pemulihan akun ini agar dapat kembali beroperasi secara normal.\n\n` +
-          `Terima kasih atas perhatian dan tindak lanjutnya.`;
-      }
-
-      const toEmail = 'android@support.whatsapp.com';
-      const subject = encodeURIComponent('Laporan Cybercrime WhatsApp - ' + reasonInput);
-      const body = encodeURIComponent(bodyText);
-
-      // Create mailto link
-      const mailtoLink = `mailto:${toEmail}?subject=${subject}&body=${body}`;
-
-      // Open mailto link to launch Gmail or default mail app
-      window.location.href = mailtoLink;
+      // Create a temporary link to trigger download
+      const link = document.createElement('a');
+      link.href = imageUrl;
+      // Filename based on prompt, sanitized
+      let filename = promptInput.value.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      if (!filename) filename = 'ai-image';
+      link.download = `${filename}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     });
   </script>
- </body>
-</html>
+</body>
+          </html>
