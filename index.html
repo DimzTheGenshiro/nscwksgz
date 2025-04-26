@@ -1,152 +1,66 @@
-<html lang="id" class="scroll-smooth">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AI Image Generator</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-  />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
-    rel="stylesheet"
-  />
+<html class="scroll-smooth" lang="id">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Pop Up Sambutan iPhone Style
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Text&amp;display=swap" rel="stylesheet"/>
   <style>
-    body {
-      font-family: 'Inter', sans-serif;
+   body {
+      font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
+        sans-serif;
     }
   </style>
-</head>
-<body class="bg-gray-50 min-h-screen flex flex-col items-center p-4">
-  <h1 class="text-3xl font-semibold mb-6 text-center text-gray-800">
-    AI Image Generator
-  </h1>
-
-  <div class="w-full max-w-xl bg-white rounded-lg shadow-md p-6 flex flex-col space-y-6">
-    <label for="prompt" class="text-gray-700 font-medium">
-      Masukkan teks gambar yang ingin kamu buat:
-    </label>
-    <textarea
-      id="prompt"
-      rows="3"
-      placeholder="Contoh: buatkan saya gambar seorang anak remaja sedang bermain komputer"
-      class="w-full border border-gray-300 rounded-md p-3 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
-    ></textarea>
-
-    <button
-      id="generateBtn"
-      class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-md flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
-    >
-      <i class="fas fa-magic mr-2"></i> Buat
-    </button>
-
-    <div
-      id="loading"
-      class="hidden justify-center items-center space-x-3 text-indigo-600"
-      aria-live="polite"
-    >
-      <svg
-        class="animate-spin h-6 w-6 text-indigo-600"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-      >
-        <circle
-          class="opacity-25"
-          cx="12"
-          cy="12"
-          r="10"
-          stroke="currentColor"
-          stroke-width="4"
-        ></circle>
-        <path
-          class="opacity-75"
-          fill="currentColor"
-          d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-        ></path>
-      </svg>
-      <span>Loading...</span>
+ </head>
+ <body class="bg-gray-100 flex items-center justify-center min-h-screen">
+  <!-- Overlay -->
+  <div class="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50" id="popupOverlay">
+   <!-- iPhone style popup container -->
+   <div class="relative bg-white rounded-3xl shadow-2xl w-80 max-w-full mx-4" style="font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
+    <!-- Top notch -->
+    <div class="flex justify-center pt-2">
+     <div class="w-28 h-7 bg-black rounded-b-3xl" style="box-shadow: 0 0 8px rgba(0,0,0,0.15);">
+     </div>
     </div>
-
-    <div
-      id="resultContainer"
-      class="hidden flex flex-col items-center space-y-4"
-    >
-      <img
-        id="resultImage"
-        src=""
-        alt="Gambar hasil AI sesuai dengan deskripsi yang dimasukkan"
-        class="rounded-md max-w-full max-h-96 shadow-lg"
-      />
-      <button
-        id="downloadBtn"
-        class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-md flex items-center space-x-2"
-      >
-        <i class="fas fa-download"></i>
-        <span>Download</span>
-      </button>
+    <!-- Content -->
+    <div class="px-6 pt-4 pb-6 text-center">
+     <img alt="Masker Oni merah dengan latar belakang putih, ilustrasi kartun" class="mx-auto mb-4" height="80" src="https://storage.googleapis.com/a1aa/image/2e1199f4-bb3b-489a-d109-f184eba0e586.jpg" width="80"/>
+     <h2 class="text-xl font-semibold text-gray-900 mb-2">
+      Haloww Selamat Datang Di
+     </h2>
+     <p class="text-lg font-bold text-gray-900 mb-4 flex justify-center items-center gap-2">
+      Market Hosting TheGenshiro
+      <span class="text-2xl">
+       ☠️👺
+      </span>
+     </p>
+     <p class="text-sm text-gray-600 italic">
+      Wkwk
+     </p>
     </div>
+    <!-- Buttons -->
+    <div class="flex border-t border-gray-200 divide-x divide-gray-200 rounded-b-3xl overflow-hidden">
+     <button aria-label="Tutup popup sambutan" class="flex-1 py-3 text-blue-600 font-semibold hover:bg-gray-100 transition-colors" id="closeBtn">
+      OK
+     </button>
+    </div>
+   </div>
   </div>
-
   <script>
-    const generateBtn = document.getElementById('generateBtn');
-    const loading = document.getElementById('loading');
-    const resultContainer = document.getElementById('resultContainer');
-    const resultImage = document.getElementById('resultImage');
-    const downloadBtn = document.getElementById('downloadBtn');
-    const promptInput = document.getElementById('prompt');
+   const popupOverlay = document.getElementById('popupOverlay');
+    const closeBtn = document.getElementById('closeBtn');
 
-    // Simulate AI image generation with placeholder images from placehold.co
-    // In real app, you would call an AI image generation API here.
-
-    function generateImageUrl(prompt) {
-      // Create a URL with the prompt text embedded for alt text and image text
-      // Using placehold.co with text param to simulate image with text
-      // Max 60 chars for text param to keep image neat
-      const text = encodeURIComponent(prompt.slice(0, 60));
-      // 600x400 size, light gray background, dark text
-      return `https://placehold.co/600x400/ddd/333?text=${text}`;
-    }
-
-    generateBtn.addEventListener('click', () => {
-      const prompt = promptInput.value.trim();
-      if (!prompt) {
-        alert('Mohon masukkan deskripsi gambar terlebih dahulu.');
-        return;
-      }
-
-      // Disable button and hide previous results
-      generateBtn.disabled = true;
-      resultContainer.classList.add('hidden');
-      loading.classList.remove('hidden');
-
-      // Simulate loading for 3 seconds
+    closeBtn.addEventListener('click', () => {
+      popupOverlay.classList.add('opacity-0', 'pointer-events-none');
       setTimeout(() => {
-        const imageUrl = generateImageUrl(prompt);
-        resultImage.src = imageUrl;
-        resultImage.alt = `Gambar AI yang dihasilkan berdasarkan deskripsi: ${prompt}`;
-        loading.classList.add('hidden');
-        resultContainer.classList.remove('hidden');
-        generateBtn.disabled = false;
-      }, 3000);
-    });
-
-    downloadBtn.addEventListener('click', () => {
-      const imageUrl = resultImage.src;
-      if (!imageUrl) return;
-
-      // Create a temporary link to trigger download
-      const link = document.createElement('a');
-      link.href = imageUrl;
-      // Filename based on prompt, sanitized
-      let filename = promptInput.value.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-');
-      if (!filename) filename = 'ai-image';
-      link.download = `${filename}.png`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+        popupOverlay.style.display = 'none';
+      }, 300);
     });
   </script>
-</body>
-          </html>
+ </body>
+</html>
