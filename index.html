@@ -14,26 +14,52 @@
     }
 
     header {
-      text-align: center;
-      padding: 100px 20px 50px;
+      position: fixed;
+      top: 0;
+      width: 100%;
       background: linear-gradient(to right, #00c6ff, #0072ff);
       color: white;
-      position: relative;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 999;
     }
 
     header h1 {
-      font-size: 48px;
-      margin-bottom: 10px;
+      font-size: 24px;
+      margin: 0;
     }
 
-    header p {
-      font-size: 20px;
-      opacity: 0.8;
+    .menu-icon {
+      font-size: 28px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .menu {
+      position: fixed;
+      top: 70px;
+      left: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 10px 20px;
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .menu a {
+      color: #0072ff;
+      text-decoration: none;
+      font-weight: bold;
     }
 
     .content {
       max-width: 900px;
-      margin: 50px auto;
+      margin: 150px auto 50px;
       padding: 20px;
       text-align: center;
       animation: fadeIn 1.5s ease-in-out;
@@ -85,20 +111,47 @@
 <body>
 
 <header>
-  <h1>Welcome to AutomationBot</h1>
-  <p>Your trusted partner for digital solutions</p>
+  <div class="menu-icon" onclick="toggleMenu()">☰</div>
+  <h1>AutomationBot</h1>
 </header>
 
-<section class="content">
+<div class="menu" id="menu">
+  <a href="#story">My Story</a>
+  <a href="#project">My Project</a>
+  <a href="#social">My Social Media</a>
+</div>
+
+<section class="content" id="story">
   <h2>About Our Service</h2>
   <p>AutomationBot provides high-quality digital products designed to automate and simplify your tasks. From Telegram bots to website store scripts, we deliver excellence and innovation for your digital journey.</p>
 
   <a href="https://t.me/automationbotbuy_bot" target="_blank" class="chat-button">Live Chat Telegram</a>
 </section>
 
+<section class="content" id="project">
+  <h2>Our Projects</h2>
+  <p>We have developed several Telegram automation bots, ecommerce templates, and web-based digital solutions ready for use by individuals and businesses.</p>
+</section>
+
+<section class="content" id="social">
+  <h2>Connect With Us</h2>
+  <p>Follow our journey through social media platforms and stay updated with our latest projects and innovations.</p>
+</section>
+
 <footer>
   &copy; 2025 AutomationBot. All rights reserved.
 </footer>
 
+<script>
+  function toggleMenu() {
+    const menu = document.getElementById('menu');
+    if (menu.style.display === 'flex') {
+      menu.style.display = 'none';
+    } else {
+      menu.style.display = 'flex';
+    }
+  }
+</script>
+
 </body>
-</html>
+  </html>
