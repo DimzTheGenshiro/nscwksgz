@@ -1,66 +1,104 @@
-<html class="scroll-smooth" lang="id">
- <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1" name="viewport"/>
-  <title>
-   Pop Up Sambutan iPhone Style
-  </title>
-  <script src="https://cdn.tailwindcss.com">
-  </script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Text&amp;display=swap" rel="stylesheet"/>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AutomationBot Landing</title>
   <style>
-   body {
-      font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-        Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
-        sans-serif;
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #ffffff, #e0f7fa);
+      color: #333;
+      overflow-x: hidden;
+    }
+
+    header {
+      text-align: center;
+      padding: 100px 20px 50px;
+      background: linear-gradient(to right, #00c6ff, #0072ff);
+      color: white;
+      position: relative;
+    }
+
+    header h1 {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      font-size: 20px;
+      opacity: 0.8;
+    }
+
+    .content {
+      max-width: 900px;
+      margin: 50px auto;
+      padding: 20px;
+      text-align: center;
+      animation: fadeIn 1.5s ease-in-out;
+    }
+
+    .content h2 {
+      font-size: 36px;
+      margin-bottom: 20px;
+      color: #0072ff;
+    }
+
+    .content p {
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    .chat-button {
+      display: inline-block;
+      margin-top: 40px;
+      padding: 15px 30px;
+      font-size: 18px;
+      background: #00c6ff;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      text-decoration: none;
+      transition: background 0.3s ease;
+    }
+
+    .chat-button:hover {
+      background: #0072ff;
+    }
+
+    footer {
+      margin-top: 80px;
+      padding: 20px;
+      background: #f1f1f1;
+      text-align: center;
+      font-size: 14px;
+      color: #777;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
- </head>
- <body class="bg-gray-100 flex items-center justify-center min-h-screen">
-  <!-- Overlay -->
-  <div class="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50" id="popupOverlay">
-   <!-- iPhone style popup container -->
-   <div class="relative bg-white rounded-3xl shadow-2xl w-80 max-w-full mx-4" style="font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
-    <!-- Top notch -->
-    <div class="flex justify-center pt-2">
-     <div class="w-28 h-7 bg-black rounded-b-3xl" style="box-shadow: 0 0 8px rgba(0,0,0,0.15);">
-     </div>
-    </div>
-    <!-- Content -->
-    <div class="px-6 pt-4 pb-6 text-center">
-     <img alt="Masker Oni merah dengan latar belakang putih, ilustrasi kartun" class="mx-auto mb-4" height="80" src="https://storage.googleapis.com/a1aa/image/2e1199f4-bb3b-489a-d109-f184eba0e586.jpg" width="80"/>
-     <h2 class="text-xl font-semibold text-gray-900 mb-2">
-      Haloww Selamat Datang Di
-     </h2>
-     <p class="text-lg font-bold text-gray-900 mb-4 flex justify-center items-center gap-2">
-      Market Hosting TheGenshiro
-      <span class="text-2xl">
-       ☠️👺
-      </span>
-     </p>
-     <p class="text-sm text-gray-600 italic">
-      Wkwk
-     </p>
-    </div>
-    <!-- Buttons -->
-    <div class="flex border-t border-gray-200 divide-x divide-gray-200 rounded-b-3xl overflow-hidden">
-     <button aria-label="Tutup popup sambutan" class="flex-1 py-3 text-blue-600 font-semibold hover:bg-gray-100 transition-colors" id="closeBtn">
-      OK
-     </button>
-    </div>
-   </div>
-  </div>
-  <script>
-   const popupOverlay = document.getElementById('popupOverlay');
-    const closeBtn = document.getElementById('closeBtn');
+</head>
+<body>
 
-    closeBtn.addEventListener('click', () => {
-      popupOverlay.classList.add('opacity-0', 'pointer-events-none');
-      setTimeout(() => {
-        popupOverlay.style.display = 'none';
-      }, 300);
-    });
-  </script>
- </body>
+<header>
+  <h1>Welcome to AutomationBot</h1>
+  <p>Your trusted partner for digital solutions</p>
+</header>
+
+<section class="content">
+  <h2>About Our Service</h2>
+  <p>AutomationBot provides high-quality digital products designed to automate and simplify your tasks. From Telegram bots to website store scripts, we deliver excellence and innovation for your digital journey.</p>
+
+  <a href="https://t.me/automationbotbuy_bot" target="_blank" class="chat-button">Live Chat Telegram</a>
+</section>
+
+<footer>
+  &copy; 2025 AutomationBot. All rights reserved.
+</footer>
+
+</body>
 </html>
