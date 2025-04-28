@@ -1,157 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AutomationBot Landing</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #ffffff, #e0f7fa);
-      color: #333;
-      overflow-x: hidden;
-    }
-
-    header {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      background: linear-gradient(to right, #00c6ff, #0072ff);
-      color: white;
-      padding: 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 999;
-    }
-
-    header h1 {
-      font-size: 24px;
-      margin: 0;
-    }
-
-    .menu-icon {
-      font-size: 28px;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .menu {
-      position: fixed;
-      top: 70px;
-      left: 20px;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      padding: 10px 20px;
-      display: none;
-      flex-direction: column;
-      gap: 10px;
-      animation: fadeIn 0.3s ease;
-    }
-
-    .menu a {
-      color: #0072ff;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    .content {
-      max-width: 900px;
-      margin: 150px auto 50px;
-      padding: 20px;
-      text-align: center;
-      animation: fadeIn 1.5s ease-in-out;
-    }
-
-    .content h2 {
-      font-size: 36px;
-      margin-bottom: 20px;
-      color: #0072ff;
-    }
-
-    .content p {
-      font-size: 18px;
-      line-height: 1.6;
-    }
-
-    .chat-button {
-      display: inline-block;
-      margin-top: 40px;
-      padding: 15px 30px;
-      font-size: 18px;
-      background: #00c6ff;
-      color: white;
-      border: none;
-      border-radius: 50px;
-      text-decoration: none;
-      transition: background 0.3s ease;
-    }
-
-    .chat-button:hover {
-      background: #0072ff;
-    }
-
-    footer {
-      margin-top: 80px;
-      padding: 20px;
-      background: #f1f1f1;
-      text-align: center;
-      font-size: 14px;
-      color: #777;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutomationBot</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5fcff;
+        }
+        header {
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 {
+            color: white;
+            margin: 0;
+            font-size: 24px;
+        }
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            gap: 20px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        section {
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .btn-telegram {
+            background: #00c6ff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        /* Popup */
+        .popup-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        .popup-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            width: 80%;
+            max-width: 400px;
+            animation: fadeIn 0.5s;
+        }
+        .popup-content h2 {
+            margin-top: 0;
+        }
+        .popup-content button {
+            margin-top: 20px;
+            background: #00c6ff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
 </head>
 <body>
 
-<header>
-  <div class="menu-icon" onclick="toggleMenu()">☰</div>
-  <h1>AutomationBot</h1>
-</header>
+    <!-- Popup -->
+    <div class="popup-overlay" id="popup">
+        <div class="popup-content">
+            <h2>Welcome to AutomationBot!</h2>
+            <p>Selamat datang di AutomationBot!  
+            Kami menyediakan berbagai produk digital berkualitas tinggi seperti bot Telegram, script toko online, dan banyak lagi.  
+            Nikmati pengalaman digital yang lebih mudah dan inovatif bersama kami!</p>
+            <button onclick="closePopup()">OK</button>
+        </div>
+    </div>
 
-<div class="menu" id="menu">
-  <a href="#story">My Story</a>
-  <a href="#project">My Project</a>
-  <a href="#social">My Social Media</a>
-</div>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <h1>AutomationBot</h1>
+            <nav>
+                <ul>
+                    <li><a href="#story">My Story</a></li>
+                    <li><a href="#project">My Project</a></li>
+                    <li><a href="#social">My Social Media</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-<section class="content" id="story">
-  <h2>About Our Service</h2>
-  <p>AutomationBot provides high-quality digital products designed to automate and simplify your tasks. From Telegram bots to website store scripts, we deliver excellence and innovation for your digital journey.</p>
+    <!-- About Section -->
+    <section id="about">
+        <h2>About Our Service</h2>
+        <p>AutomationBot provides high-quality digital products designed to automate and simplify your tasks.  
+        From Telegram bots to website store scripts, we deliver excellence and innovation for your digital journey.</p>
+        <a class="btn-telegram" href="https://t.me/yourtelegramusername" target="_blank">Live Chat Telegram</a>
+    </section>
 
-  <a href="https://t.me/automationbotbuy_bot" target="_blank" class="chat-button">Live Chat Telegram</a>
-</section>
-
-<section class="content" id="project">
-  <h2>Our Projects</h2>
-  <p>We have developed several Telegram automation bots, ecommerce templates, and web-based digital solutions ready for use by individuals and businesses.</p>
-</section>
-
-<section class="content" id="social">
-  <h2>Connect With Us</h2>
-  <p>Follow our journey through social media platforms and stay updated with our latest projects and innovations.</p>
-</section>
-
-<footer>
-  &copy; 2025 AutomationBot. All rights reserved.
-</footer>
-
-<script>
-  function toggleMenu() {
-    const menu = document.getElementById('menu');
-    if (menu.style.display === 'flex') {
-      menu.style.display = 'none';
-    } else {
-      menu.style.display = 'flex';
-    }
-  }
-</script>
+    <script>
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+    </script>
 
 </body>
-  </html>
+</html>
