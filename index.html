@@ -1,0 +1,895 @@
+<html lang="en" class="scroll-smooth" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Product Dashboard with PayPal Integration</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+
+  <div id="app" class="flex-grow flex flex-col">
+    <!-- Login/Register or Dashboard will be rendered here -->
+  </div>
+
+  <!-- PayPal SDK -->
+  <script src="https://www.paypal.com/sdk/js?client-id=Ae2UJcfqNOymRYYKMYnE17sXEXBaW8tJF_NZ3M5huk1DREqaMHG_53DcgtePpGv-KXvSBNPxkTfJzboY&currency=USD"></script>
+
+  <script>
+    // Simple localStorage-based "database" for users and orders
+    const db = {
+      usersKey: 'app_users',
+      ordersKey: 'app_orders',
+      getUsers() {
+        return JSON.parse(localStorage.getItem(this.usersKey) || '[]');
+      },
+      saveUsers(users) {
+        localStorage.setItem(this.usersKey, JSON.stringify(users));
+      },
+      getOrders() {
+        return JSON.parse(localStorage.getItem(this.ordersKey) || '[]');
+      },
+      saveOrders(orders) {
+        localStorage.setItem(this.ordersKey, JSON.stringify(orders));
+      },
+    };
+
+    // Products data
+    const products = {
+      website: [
+        {
+          id: 'web1',
+          title: 'Professional Portfolio Website',
+          description: 'A sleek, modern portfolio website template for creatives and professionals.',
+          price: 10,
+          thumbnail: 'https://placehold.co/400x300/png?text=Portfolio+Website',
+          downloadLink: 'https://example.com/downloads/portfolio-website.zip',
+        },
+        {
+          id: 'web2',
+          title: 'E-commerce Website Script',
+          description: 'Complete e-commerce website script with cart and payment integration.',
+          price: 25,
+          thumbnail: 'https://placehold.co/400x300/png?text=E-commerce+Script',
+          downloadLink: 'https://example.com/downloads/ecommerce-script.zip',
+        },
+        {
+          id: 'web3',
+          title: 'Blog Website Template',
+          description: 'Clean and responsive blog website template for writers and bloggers.',
+          price: 8,
+          thumbnail: 'https://placehold.co/400x300/png?text=Blog+Template',
+          downloadLink: 'https://example.com/downloads/blog-template.zip',
+        },
+      ],
+      script: [
+        {
+          id: 'scr1',
+          title: 'JavaScript To-Do List',
+          description: 'Simple and effective to-do list script with local storage support.',
+          price: 5,
+          thumbnail: 'https://placehold.co/400x300/png?text=To-Do+List+Script',
+          downloadLink: 'https://example.com/downloads/todo-list.zip',
+        },
+        {
+          id: 'scr2',
+          title: 'Chat Application Script',
+          description: 'Real-time chat application script using WebSocket technology.',
+          price: 30,
+          thumbnail: 'https://placehold.co/400x300/png?text=Chat+App+Script',
+          downloadLink: 'https://example.com/downloads/chat-app.zip',
+        },
+        {
+          id: 'scr3',
+          title: 'Weather Widget Script',
+          description: 'Lightweight weather widget script with API integration.',
+          price: 7,
+          thumbnail: 'https://placehold.co/400x300/png?text=Weather+Widget',
+          downloadLink: 'https://example.com/downloads/weather-widget.zip',
+        },
+      ],
+    };
+
+    // Current session user key
+    const sessionUserKey = 'app_session_user';
+
+    // Current order key for session
+    const sessionOrderKey = 'app_session_order';
+
+    // App root element
+    const app = document.getElementById('app');
+
+    // Utility: create element with classes and attributes
+    function createElement(tag, options = {}) {
+      const el = document.createElement(tag);
+      if (options.classes) el.className = options.classes;
+      if (options.attrs) {
+        for (const [k, v] of Object.entries(options.attrs)) {
+          el.setAttribute(k, v);
+        }
+      }
+      if (options.text) el.textContent = options.text;
+      if (options.html) el.innerHTML = options.html;
+      return el;
+    }
+
+    // Utility: format price USD
+    function formatPriceUSD(price) {
+      return `$${price.toFixed(2)}`;
+    }
+
+    // Utility: generate random order id
+    function generateOrderId() {
+      return Math.floor(100000 + Math.random() * 900000);
+    }
+
+    // Check if user is logged in
+    function getCurrentUser() {
+      const user = localStorage.getItem(sessionUserKey);
+      return user ? JSON.parse(user) : null;
+    }
+
+    // Set current user session
+    function setCurrentUser(user) {
+      localStorage.setItem(sessionUserKey, JSON.stringify(user));
+    }
+
+    // Clear current user session
+    function clearCurrentUser() {
+      localStorage.removeItem(sessionUserKey);
+    }
+
+    // Set current order session
+    function setCurrentOrder(order) {
+      localStorage.setItem(sessionOrderKey, JSON.stringify(order));
+    }
+
+    // Get current order session
+    function getCurrentOrder() {
+      const order = localStorage.getItem(sessionOrderKey);
+      return order ? JSON.parse(order) : null;
+    }
+
+    // Clear current order session
+    function clearCurrentOrder() {
+      localStorage.removeItem(sessionOrderKey);
+    }
+
+    // Render Login Page
+    function renderLogin() {
+      app.innerHTML = '';
+      const container = createElement('div', { classes: 'max-w-md mx-auto mt-20 bg-white p-8 rounded shadow' });
+
+      const title = createElement('h1', { classes: 'text-3xl font-semibold mb-6 text-center', text: 'Login to Your Account' });
+      container.appendChild(title);
+
+      const form = createElement('form', { classes: 'space-y-6' });
+
+      // Email input
+      const emailGroup = createElement('div');
+      const emailLabel = createElement('label', { classes: 'block mb-1 font-medium', text: 'Email' });
+      emailLabel.setAttribute('for', 'email');
+      const emailInput = createElement('input', { classes: 'w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500', attrs: { type: 'email', id: 'email', required: true, autocomplete: 'username' } });
+      emailGroup.appendChild(emailLabel);
+      emailGroup.appendChild(emailInput);
+      form.appendChild(emailGroup);
+
+      // Password input
+      const passGroup = createElement('div');
+      const passLabel = createElement('label', { classes: 'block mb-1 font-medium', text: 'Password' });
+      passLabel.setAttribute('for', 'password');
+      const passInput = createElement('input', { classes: 'w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500', attrs: { type: 'password', id: 'password', required: true, autocomplete: 'current-password' } });
+      passGroup.appendChild(passLabel);
+      passGroup.appendChild(passInput);
+      form.appendChild(passGroup);
+
+      // Submit button
+      const submitBtn = createElement('button', { classes: 'w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 transition', text: 'Login' });
+      submitBtn.type = 'submit';
+      form.appendChild(submitBtn);
+
+      // Register link
+      const registerLink = createElement('p', { classes: 'mt-4 text-center text-gray-600' });
+      registerLink.innerHTML = `Don't have an account? <a href="#" id="go-register" class="text-indigo-600 hover:underline">Register here</a>`;
+      container.appendChild(form);
+      container.appendChild(registerLink);
+
+      app.appendChild(container);
+
+      // Event listeners
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+        const email = emailInput.value.trim().toLowerCase();
+        const password = passInput.value;
+        if (!email || !password) {
+          alert('Please fill in all fields.');
+          return;
+        }
+        const users = db.getUsers();
+        const user = users.find(u => u.email === email && u.password === password);
+        if (!user) {
+          alert('Invalid email or password.');
+          return;
+        }
+        setCurrentUser({ email: user.email, name: user.name });
+        renderDashboard();
+      });
+
+      document.getElementById('go-register').addEventListener('click', e => {
+        e.preventDefault();
+        renderRegister();
+      });
+    }
+
+    // Render Register Page
+    function renderRegister() {
+      app.innerHTML = '';
+      const container = createElement('div', { classes: 'max-w-md mx-auto mt-20 bg-white p-8 rounded shadow' });
+
+      const title = createElement('h1', { classes: 'text-3xl font-semibold mb-6 text-center', text: 'Create a New Account' });
+      container.appendChild(title);
+
+      const form = createElement('form', { classes: 'space-y-6' });
+
+      // Name input
+      const nameGroup = createElement('div');
+      const nameLabel = createElement('label', { classes: 'block mb-1 font-medium', text: 'Full Name' });
+      nameLabel.setAttribute('for', 'name');
+      const nameInput = createElement('input', { classes: 'w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500', attrs: { type: 'text', id: 'name', required: true, autocomplete: 'name' } });
+      nameGroup.appendChild(nameLabel);
+      nameGroup.appendChild(nameInput);
+      form.appendChild(nameGroup);
+
+      // Email input
+      const emailGroup = createElement('div');
+      const emailLabel = createElement('label', { classes: 'block mb-1 font-medium', text: 'Email' });
+      emailLabel.setAttribute('for', 'email');
+      const emailInput = createElement('input', { classes: 'w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500', attrs: { type: 'email', id: 'email', required: true, autocomplete: 'email' } });
+      emailGroup.appendChild(emailLabel);
+      emailGroup.appendChild(emailInput);
+      form.appendChild(emailGroup);
+
+      // Password input
+      const passGroup = createElement('div');
+      const passLabel = createElement('label', { classes: 'block mb-1 font-medium', text: 'Password' });
+      passLabel.setAttribute('for', 'password');
+      const passInput = createElement('input', { classes: 'w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500', attrs: { type: 'password', id: 'password', required: true, autocomplete: 'new-password' } });
+      passGroup.appendChild(passLabel);
+      passGroup.appendChild(passInput);
+      form.appendChild(passGroup);
+
+      // Submit button
+      const submitBtn = createElement('button', { classes: 'w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 transition', text: 'Register' });
+      submitBtn.type = 'submit';
+      form.appendChild(submitBtn);
+
+      // Login link
+      const loginLink = createElement('p', { classes: 'mt-4 text-center text-gray-600' });
+      loginLink.innerHTML = `Already have an account? <a href="#" id="go-login" class="text-indigo-600 hover:underline">Login here</a>`;
+      container.appendChild(form);
+      container.appendChild(loginLink);
+
+      app.appendChild(container);
+
+      // Event listeners
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+        const name = nameInput.value.trim();
+        const email = emailInput.value.trim().toLowerCase();
+        const password = passInput.value;
+        if (!name || !email || !password) {
+          alert('Please fill in all fields.');
+          return;
+        }
+        const users = db.getUsers();
+        if (users.find(u => u.email === email)) {
+          alert('Email already registered.');
+          return;
+        }
+        users.push({ name, email, password });
+        db.saveUsers(users);
+        alert('Registration successful! Please login.');
+        renderLogin();
+      });
+
+      document.getElementById('go-login').addEventListener('click', e => {
+        e.preventDefault();
+        renderLogin();
+      });
+    }
+
+    // Render Header (used in dashboard and other pages)
+    function renderHeader(userName) {
+      const header = createElement('header', { classes: 'bg-white shadow sticky top-0 z-30' });
+      const container = createElement('div', { classes: 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16' });
+
+      // Logo / Title
+      const logo = createElement('a', { classes: 'text-indigo-600 font-bold text-xl', text: 'MyProductStore' });
+      logo.href = '#';
+      container.appendChild(logo);
+
+      // Navigation
+      const nav = createElement('nav', { classes: 'flex items-center space-x-6' });
+
+      const links = [
+        { text: 'Dashboard', action: () => renderDashboard() },
+        { text: 'Produk', action: () => renderProdukCategories() },
+        { text: 'Pembayaran', action: () => renderPembayaran() },
+        { text: 'Status', action: () => renderStatus() },
+      ];
+
+      links.forEach(link => {
+        const a = createElement('button', { classes: 'text-gray-700 hover:text-indigo-600 font-medium focus:outline-none', text: link.text });
+        a.type = 'button';
+        a.addEventListener('click', link.action);
+        nav.appendChild(a);
+      });
+
+      // User dropdown
+      const userMenuWrapper = createElement('div', { classes: 'relative' });
+      const userBtn = createElement('button', { classes: 'flex items-center space-x-2 focus:outline-none' });
+      const userIcon = createElement('i', { classes: 'fas fa-user-circle text-2xl text-indigo-600' });
+      const userNameSpan = createElement('span', { classes: 'font-medium text-gray-700', text: userName });
+      userBtn.appendChild(userIcon);
+      userBtn.appendChild(userNameSpan);
+      userMenuWrapper.appendChild(userBtn);
+
+      const dropdown = createElement('div', { classes: 'absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded shadow-lg hidden' });
+      const logoutBtn = createElement('button', { classes: 'block w-full text-left px-4 py-2 text-gray-700 hover:bg-indigo-100', text: 'Logout' });
+      logoutBtn.type = 'button';
+      logoutBtn.addEventListener('click', () => {
+        clearCurrentUser();
+        clearCurrentOrder();
+        renderLogin();
+      });
+      dropdown.appendChild(logoutBtn);
+      userMenuWrapper.appendChild(dropdown);
+
+      userBtn.addEventListener('click', () => {
+        dropdown.classList.toggle('hidden');
+      });
+
+      container.appendChild(nav);
+      container.appendChild(userMenuWrapper);
+      header.appendChild(container);
+      return header;
+    }
+
+    // Render Dashboard Page
+    function renderDashboard() {
+      const user = getCurrentUser();
+      if (!user) {
+        renderLogin();
+        return;
+      }
+      app.innerHTML = '';
+      app.appendChild(renderHeader(user.name));
+
+      const main = createElement('main', { classes: 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow' });
+
+      // Welcome message
+      const welcome = createElement('h2', { classes: 'text-2xl font-semibold mb-6', text: `Welcome, ${user.name}!` });
+      main.appendChild(welcome);
+
+      // Slider container
+      const sliderContainer = createElement('div', { classes: 'relative w-full max-w-4xl mx-auto mb-10' });
+
+      // Slides wrapper
+      const slidesWrapper = createElement('div', { classes: 'overflow-hidden rounded-lg shadow-lg' });
+      sliderContainer.appendChild(slidesWrapper);
+
+      // Slides flex container
+      const slides = createElement('div', { classes: 'flex transition-transform duration-500 ease-in-out' });
+      slidesWrapper.appendChild(slides);
+
+      // Slide images data
+      const slideImages = [
+        {
+          src: 'https://placehold.co/800x300/png?text=Promo+1+-+Big+Discount+on+Websites',
+          alt: 'Promotional banner showing big discount on website products with colorful graphics and text',
+        },
+        {
+          src: 'https://placehold.co/800x300/png?text=Promo+2+-+New+Script+Releases',
+          alt: 'Promotional banner showing new script releases with modern design and icons',
+        },
+        {
+          src: 'https://placehold.co/800x300/png?text=Promo+3+-+Limited+Time+Offer',
+          alt: 'Promotional banner showing limited time offer with countdown and vibrant colors',
+        },
+      ];
+
+      slideImages.forEach(({ src, alt }) => {
+        const slide = createElement('div', { classes: 'min-w-full flex-shrink-0' });
+        const img = createElement('img', { classes: 'w-full h-48 object-cover', attrs: { src, alt } });
+        slide.appendChild(img);
+        slides.appendChild(slide);
+      });
+
+      // Slider controls
+      const prevBtn = createElement('button', { classes: 'absolute top-1/2 left-2 -translate-y-1/2 bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 focus:outline-none' });
+      prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+      const nextBtn = createElement('button', { classes: 'absolute top-1/2 right-2 -translate-y-1/2 bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 focus:outline-none' });
+      nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+
+      sliderContainer.appendChild(prevBtn);
+      sliderContainer.appendChild(nextBtn);
+
+      main.appendChild(sliderContainer);
+
+      // Product categories icons
+      const categoriesContainer = createElement('div', { classes: 'max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-8 text-center' });
+
+      // Category: Website
+      const websiteCat = createElement('button', { classes: 'flex flex-col items-center space-y-2 focus:outline-none' });
+      websiteCat.type = 'button';
+      const websiteIcon = createElement('i', { classes: 'fas fa-globe text-indigo-600 text-5xl' });
+      const websiteLabel = createElement('span', { classes: 'font-semibold text-gray-700', text: 'Website' });
+      websiteCat.appendChild(websiteIcon);
+      websiteCat.appendChild(websiteLabel);
+      websiteCat.addEventListener('click', () => renderProduk('website'));
+      categoriesContainer.appendChild(websiteCat);
+
+      // Category: Script
+      const scriptCat = createElement('button', { classes: 'flex flex-col items-center space-y-2 focus:outline-none' });
+      scriptCat.type = 'button';
+      const scriptIcon = createElement('i', { classes: 'fas fa-code text-indigo-600 text-5xl' });
+      const scriptLabel = createElement('span', { classes: 'font-semibold text-gray-700', text: 'Script' });
+      scriptCat.appendChild(scriptIcon);
+      scriptCat.appendChild(scriptLabel);
+      scriptCat.addEventListener('click', () => renderProduk('script'));
+      categoriesContainer.appendChild(scriptCat);
+
+      main.appendChild(categoriesContainer);
+
+      app.appendChild(main);
+
+      // Slider logic
+      let currentIndex = 0;
+      function updateSlider() {
+        slides.style.transform = `translateX(-${currentIndex * 100}%)`;
+      }
+      prevBtn.addEventListener('click', () => {
+        currentIndex = (currentIndex - 1 + slideImages.length) % slideImages.length;
+        updateSlider();
+      });
+      nextBtn.addEventListener('click', () => {
+        currentIndex = (currentIndex + 1) % slideImages.length;
+        updateSlider();
+      });
+
+      // Auto slide every 5 seconds
+      setInterval(() => {
+        currentIndex = (currentIndex + 1) % slideImages.length;
+        updateSlider();
+      }, 5000);
+    }
+
+    // Render Produk Categories page (same as dashboard categories but separate page)
+    function renderProdukCategories() {
+      const user = getCurrentUser();
+      if (!user) {
+        renderLogin();
+        return;
+      }
+      app.innerHTML = '';
+      app.appendChild(renderHeader(user.name));
+
+      const main = createElement('main', { classes: 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow' });
+
+      const title = createElement('h2', { classes: 'text-2xl font-semibold mb-6', text: 'Select Product Category' });
+      main.appendChild(title);
+
+      const categoriesContainer = createElement('div', { classes: 'max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-8 text-center' });
+
+      // Category: Website
+      const websiteCat = createElement('button', { classes: 'flex flex-col items-center space-y-2 focus:outline-none' });
+      websiteCat.type = 'button';
+      const websiteIcon = createElement('i', { classes: 'fas fa-globe text-indigo-600 text-5xl' });
+      const websiteLabel = createElement('span', { classes: 'font-semibold text-gray-700', text: 'Website' });
+      websiteCat.appendChild(websiteIcon);
+      websiteCat.appendChild(websiteLabel);
+      websiteCat.addEventListener('click', () => renderProduk('website'));
+      categoriesContainer.appendChild(websiteCat);
+
+      // Category: Script
+      const scriptCat = createElement('button', { classes: 'flex flex-col items-center space-y-2 focus:outline-none' });
+      scriptCat.type = 'button';
+      const scriptIcon = createElement('i', { classes: 'fas fa-code text-indigo-600 text-5xl' });
+      const scriptLabel = createElement('span', { classes: 'font-semibold text-gray-700', text: 'Script' });
+      scriptCat.appendChild(scriptIcon);
+      scriptCat.appendChild(scriptLabel);
+      scriptCat.addEventListener('click', () => renderProduk('script'));
+      categoriesContainer.appendChild(scriptCat);
+
+      main.appendChild(categoriesContainer);
+
+      app.appendChild(main);
+    }
+
+    // Render Produk list page for a category
+    function renderProduk(category) {
+      const user = getCurrentUser();
+      if (!user) {
+        renderLogin();
+        return;
+      }
+      app.innerHTML = '';
+      app.appendChild(renderHeader(user.name));
+
+      const main = createElement('main', { classes: 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow' });
+
+      const backBtn = createElement('button', { classes: 'mb-6 text-indigo-600 hover:underline focus:outline-none flex items-center space-x-2' });
+      backBtn.type = 'button';
+      backBtn.innerHTML = '<i class="fas fa-arrow-left"></i><span>Back to Categories</span>';
+      backBtn.addEventListener('click', () => renderProdukCategories());
+      main.appendChild(backBtn);
+
+      const title = createElement('h2', { classes: 'text-2xl font-semibold mb-6 capitalize', text: `${category} Products` });
+      main.appendChild(title);
+
+      const productGrid = createElement('div', { classes: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8' });
+
+      products[category].forEach(product => {
+        const card = createElement('div', { classes: 'bg-white rounded-lg shadow hover:shadow-lg transition flex flex-col' });
+
+        const img = createElement('img', { classes: 'w-full h-48 object-cover rounded-t-lg', attrs: { src: product.thumbnail, alt: `Thumbnail image of product titled ${product.title}` } });
+        card.appendChild(img);
+
+        const cardBody = createElement('div', { classes: 'p-4 flex flex-col flex-grow' });
+
+        const prodTitle = createElement('h3', { classes: 'text-lg font-semibold mb-2', text: product.title });
+        cardBody.appendChild(prodTitle);
+
+        const prodDesc = createElement('p', { classes: 'text-gray-600 flex-grow', text: product.description });
+        cardBody.appendChild(prodDesc);
+
+        const price = createElement('p', { classes: 'mt-4 font-semibold text-indigo-600', text: formatPriceUSD(product.price) });
+        cardBody.appendChild(price);
+
+        const buyBtn = createElement('button', { classes: 'mt-4 bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 transition', text: 'Buy' });
+        buyBtn.type = 'button';
+        buyBtn.addEventListener('click', () => renderBuy(product));
+        cardBody.appendChild(buyBtn);
+
+        card.appendChild(cardBody);
+        productGrid.appendChild(card);
+      });
+
+      main.appendChild(productGrid);
+      app.appendChild(main);
+    }
+
+    // Render Buy page (enter name and pay)
+    function renderBuy(product) {
+      const user = getCurrentUser();
+      if (!user) {
+        renderLogin();
+        return;
+      }
+      app.innerHTML = '';
+      app.appendChild(renderHeader(user.name));
+
+      const main = createElement('main', { classes: 'max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow' });
+
+      const backBtn = createElement('button', { classes: 'mb-6 text-indigo-600 hover:underline focus:outline-none flex items-center space-x-2' });
+      backBtn.type = 'button';
+      backBtn.innerHTML = '<i class="fas fa-arrow-left"></i><span>Back to Products</span>';
+      backBtn.addEventListener('click', () => renderProduk(product.id.startsWith('web') ? 'website' : 'script'));
+      main.appendChild(backBtn);
+
+      const title = createElement('h2', { classes: 'text-2xl font-semibold mb-6', text: `Buy: ${product.title}` });
+      main.appendChild(title);
+
+      const img = createElement('img', { classes: 'w-full h-48 object-cover rounded-lg mb-6', attrs: { src: product.thumbnail, alt: `Thumbnail image of product titled ${product.title}` } });
+      main.appendChild(img);
+
+      const desc = createElement('p', { classes: 'mb-4 text-gray-700', text: product.description });
+      main.appendChild(desc);
+
+      const price = createElement('p', { classes: 'mb-6 font-semibold text-indigo-600 text-lg', text: `Price: ${formatPriceUSD(product.price)}` });
+      main.appendChild(price);
+
+      // Form for buyer name
+      const form = createElement('form', { classes: 'space-y-6' });
+
+      const nameGroup = createElement('div');
+      const nameLabel = createElement('label', { classes: 'block mb-1 font-medium', text: 'Your Full Name' });
+      nameLabel.setAttribute('for', 'buyerName');
+      const nameInput = createElement('input', { classes: 'w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500', attrs: { type: 'text', id: 'buyerName', required: true, autocomplete: 'name' } });
+      nameGroup.appendChild(nameLabel);
+      nameGroup.appendChild(nameInput);
+      form.appendChild(nameGroup);
+
+      // PayPal container
+      const paypalContainer = createElement('div', { classes: 'mt-6' });
+      form.appendChild(paypalContainer);
+
+      main.appendChild(form);
+      app.appendChild(main);
+
+      // On form submit, do nothing because PayPal button handles payment
+      form.addEventListener('submit', e => e.preventDefault());
+
+      // Render PayPal button
+      paypal.Buttons({
+        style: {
+          layout: 'vertical',
+          color: 'blue',
+          shape: 'rect',
+          label: 'paypal',
+        },
+        createOrder: function(data, actions) {
+          const buyerName = nameInput.value.trim();
+          if (!buyerName) {
+            alert('Please enter your full name.');
+            return actions.reject();
+          }
+          // Create order on client side
+          return actions.order.create({
+            purchase_units: [{
+              amount: {
+                value: product.price.toString(),
+              },
+              description: product.title,
+            }],
+          });
+        },
+        onApprove: function(data, actions) {
+          return actions.order.capture().then(function(details) {
+            // Save order info in localStorage
+            const orders = db.getOrders();
+            const orderId = generateOrderId();
+            const order = {
+              id: orderId,
+              productId: product.id,
+              productTitle: product.title,
+              price: product.price,
+              buyerName: nameInput.value.trim(),
+              status: 'success',
+              paypalOrderId: data.orderID,
+              downloadLink: product.downloadLink,
+            };
+            orders.push(order);
+            db.saveOrders(orders);
+            setCurrentOrder(order);
+            alert(`Payment successful! Order ID #${orderId}`);
+            renderStatus(orderId);
+          });
+        },
+        onError: function(err) {
+          alert('Payment could not be processed. Please try again.');
+          console.error(err);
+        },
+        onCancel: function(data) {
+          alert('Payment cancelled.');
+        }
+      }).render(paypalContainer);
+    }
+
+    // Render Pembayaran page (list all orders with pay button if pending)
+    function renderPembayaran() {
+      const user = getCurrentUser();
+      if (!user) {
+        renderLogin();
+        return;
+      }
+      app.innerHTML = '';
+      app.appendChild(renderHeader(user.name));
+
+      const main = createElement('main', { classes: 'max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow' });
+
+      const title = createElement('h2', { classes: 'text-2xl font-semibold mb-6', text: 'Pembayaran (Payments)' });
+      main.appendChild(title);
+
+      const orders = db.getOrders().filter(o => o.buyerName.toLowerCase() === user.name.toLowerCase() || o.buyerName.toLowerCase() === user.email.toLowerCase());
+
+      if (orders.length === 0) {
+        const noOrders = createElement('p', { classes: 'text-gray-600', text: 'No payment orders found.' });
+        main.appendChild(noOrders);
+      } else {
+        const table = createElement('table', { classes: 'w-full table-auto border-collapse border border-gray-300' });
+        const thead = createElement('thead', { classes: 'bg-indigo-100' });
+        const trHead = createElement('tr');
+        ['Order ID', 'Item', 'Price', 'Status', 'Action'].forEach(text => {
+          const th = createElement('th', { classes: 'border border-gray-300 px-4 py-2 text-left text-sm font-semibold text-gray-700', text });
+          trHead.appendChild(th);
+        });
+        thead.appendChild(trHead);
+        table.appendChild(thead);
+
+        const tbody = createElement('tbody');
+        orders.forEach(order => {
+          const tr = createElement('tr', { classes: 'hover:bg-gray-50' });
+          const tdId = createElement('td', { classes: 'border border-gray-300 px-4 py-2 text-sm', text: `#${order.id}` });
+          const tdItem = createElement('td', { classes: 'border border-gray-300 px-4 py-2 text-sm', text: order.productTitle });
+          const tdPrice = createElement('td', { classes: 'border border-gray-300 px-4 py-2 text-sm text-indigo-600 font-semibold', text: formatPriceUSD(order.price) });
+          const tdStatus = createElement('td', { classes: 'border border-gray-300 px-4 py-2 text-sm' });
+          const statusSpan = createElement('span', { classes: order.status === 'success' ? 'text-green-600 font-semibold' : 'text-yellow-600 font-semibold', text: order.status.charAt(0).toUpperCase() + order.status.slice(1) });
+          tdStatus.appendChild(statusSpan);
+
+          const tdAction = createElement('td', { classes: 'border border-gray-300 px-4 py-2 text-sm' });
+
+          if (order.status === 'pending') {
+            const payBtn = createElement('button', { classes: 'bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 transition', text: 'Pay' });
+            payBtn.type = 'button';
+            payBtn.addEventListener('click', () => renderPayOrder(order));
+            tdAction.appendChild(payBtn);
+          } else if (order.status === 'success') {
+            const downloadBtn = createElement('a', { classes: 'bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition inline-block', text: 'Download' });
+            downloadBtn.href = order.downloadLink;
+            downloadBtn.target = '_blank';
+            downloadBtn.rel = 'noopener noreferrer';
+            tdAction.appendChild(downloadBtn);
+          } else {
+            tdAction.textContent = '-';
+          }
+
+          tr.appendChild(tdId);
+          tr.appendChild(tdItem);
+          tr.appendChild(tdPrice);
+          tr.appendChild(tdStatus);
+          tr.appendChild(tdAction);
+          tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+        main.appendChild(table);
+      }
+
+      app.appendChild(main);
+    }
+
+    // Render Status page for a specific order or last order
+    function renderStatus(orderId = null) {
+      const user = getCurrentUser();
+      if (!user) {
+        renderLogin();
+        return;
+      }
+      app.innerHTML = '';
+      app.appendChild(renderHeader(user.name));
+
+      const main = createElement('main', { classes: 'max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow' });
+
+      let order = null;
+      if (orderId) {
+        const orders = db.getOrders();
+        order = orders.find(o => o.id === orderId);
+      }
+      if (!order) {
+        order = getCurrentOrder();
+      }
+      if (!order) {
+        const noOrderMsg = createElement('p', { classes: 'text-gray-600', text: 'No order found.' });
+        main.appendChild(noOrderMsg);
+        app.appendChild(main);
+        return;
+      }
+
+      const title = createElement('h2', { classes: 'text-2xl font-semibold mb-6', text: `Order Status #${order.id}` });
+      main.appendChild(title);
+
+      const infoList = createElement('ul', { classes: 'mb-6 space-y-2 text-gray-700' });
+      const li1 = createElement('li', { html: `<strong>Item:</strong> ${order.productTitle}` });
+      const li2 = createElement('li', { html: `<strong>Price:</strong> ${formatPriceUSD(order.price)}` });
+      const li3 = createElement('li', { html: `<strong>Buyer Name:</strong> ${order.buyerName}` });
+      const li4 = createElement('li', { html: `<strong>Status:</strong> <span class="${order.status === 'success' ? 'text-green-600 font-semibold' : 'text-yellow-600 font-semibold'}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span>` });
+      infoList.appendChild(li1);
+      infoList.appendChild(li2);
+      infoList.appendChild(li3);
+      infoList.appendChild(li4);
+      main.appendChild(infoList);
+
+      if (order.status === 'pending') {
+        const payBtn = createElement('button', { classes: 'bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700 transition w-full', text: 'Pay Now' });
+        payBtn.type = 'button';
+        payBtn.addEventListener('click', () => renderPayOrder(order));
+        main.appendChild(payBtn);
+      } else if (order.status === 'success') {
+        const downloadBtn = createElement('a', { classes: 'bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition w-full inline-block text-center', text: 'Click to Download Product' });
+        downloadBtn.href = order.downloadLink;
+        downloadBtn.target = '_blank';
+        downloadBtn.rel = 'noopener noreferrer';
+        main.appendChild(downloadBtn);
+      }
+
+      app.appendChild(main);
+    }
+
+    // Render Pay order page (for pending orders)
+    function renderPayOrder(order) {
+      const user = getCurrentUser();
+      if (!user) {
+        renderLogin();
+        return;
+      }
+      app.innerHTML = '';
+      app.appendChild(renderHeader(user.name));
+
+      const main = createElement('main', { classes: 'max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow' });
+
+      const title = createElement('h2', { classes: 'text-2xl font-semibold mb-6', text: `Pay for Order #${order.id}` });
+      main.appendChild(title);
+
+      const desc = createElement('p', { classes: 'mb-4 text-gray-700', text: `Item: ${order.productTitle}` });
+      main.appendChild(desc);
+
+      const price = createElement('p', { classes: 'mb-6 font-semibold text-indigo-600 text-lg', text: `Price: ${formatPriceUSD(order.price)}` });
+      main.appendChild(price);
+
+      // PayPal container
+      const paypalContainer = createElement('div', { classes: 'mt-6' });
+      main.appendChild(paypalContainer);
+
+      app.appendChild(main);
+
+      paypal.Buttons({
+        style: {
+          layout: 'vertical',
+          color: 'blue',
+          shape: 'rect',
+          label: 'paypal',
+        },
+        createOrder: function(data, actions) {
+          return actions.order.create({
+            purchase_units: [{
+              amount: {
+                value: order.price.toString(),
+              },
+              description: order.productTitle,
+            }],
+          });
+        },
+        onApprove: function(data, actions) {
+          return actions.order.capture().then(function(details) {
+            // Update order status to success
+            const orders = db.getOrders();
+            const idx = orders.findIndex(o => o.id === order.id);
+            if (idx !== -1) {
+              orders[idx].status = 'success';
+              orders[idx].paypalOrderId = data.orderID;
+              db.saveOrders(orders);
+              setCurrentOrder(orders[idx]);
+              alert(`Payment successful! Order ID #${order.id}`);
+              renderStatus(order.id);
+            } else {
+              alert('Order not found.');
+              renderDashboard();
+            }
+          });
+        },
+        onError: function(err) {
+          alert('Payment could not be processed. Please try again.');
+          console.error(err);
+        },
+        onCancel: function(data) {
+          alert('Payment cancelled.');
+        }
+      }).render(paypalContainer);
+    }
+
+    // On page load, check session and render appropriate page
+    function init() {
+      const user = getCurrentUser();
+      if (user) {
+        renderDashboard();
+      } else {
+        renderLogin();
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
