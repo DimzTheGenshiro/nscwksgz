@@ -1,0 +1,918 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AutomationBot</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f9fafb;
+    }
+    /* Smooth fade and slide animations */
+    .fade-slide-enter-active,
+    .fade-slide-leave-active {
+      transition: all 0.5s ease;
+    }
+    .fade-slide-enter-from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    .fade-slide-leave-to {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    /* Button ripple effect */
+    .ripple {
+      position: relative;
+      overflow: hidden;
+    }
+    .ripple:after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      background: rgba(255, 255, 255, 0.3);
+      opacity: 0;
+      transform: scale(0);
+      transition: transform 0.4s, opacity 0.8s;
+    }
+    .ripple:active:after {
+      opacity: 1;
+      transform: scale(2);
+      transition: 0s;
+    }
+    /* Scrollbar for product list */
+    .scrollbar-thin::-webkit-scrollbar {
+      height: 6px;
+    }
+    .scrollbar-thin::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+      background-color: #a78bfa;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+  <div id="app" class="flex-grow flex flex-col">
+    <!-- Header -->
+    <header
+      class="bg-white shadow-md sticky top-0 z-50"
+      :class="{'shadow-lg': page !== 'dashboard'}"
+    >
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16"
+      >
+        <h1
+          class="text-2xl font-extrabold text-indigo-600 cursor-pointer select-none hover:text-indigo-700 transition duration-300"
+          @click="goTo('dashboard')"
+          tabindex="0"
+          @keydown.enter="goTo('dashboard')"
+          aria-label="Go to Dashboard"
+        >
+          AutomationBot
+        </h1>
+        <nav
+          class="space-x-8 text-gray-700 font-semibold hidden sm:flex select-none"
+          role="navigation"
+          aria-label="Primary Navigation"
+        >
+          <button
+            @click="goTo('dashboard')"
+            class="relative group focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 rounded"
+            :class="{'text-indigo-600': page === 'dashboard', 'hover:text-indigo-600': page !== 'dashboard'}"
+            aria-current="page"
+          >
+            Dashboard
+            <span
+              class="absolute left-0 -bottom-1 w-full h-0.5 bg-indigo-600 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"
+              :class="{'scale-x-100': page === 'dashboard'}"
+            ></span>
+          </button>
+          <button
+            @click="goTo('products')"
+            class="relative group focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 rounded"
+            :class="{'text-indigo-600': page === 'products' || page === 'productDetail' || page === 'checkout', 'hover:text-indigo-600': !(page === 'products' || page === 'productDetail' || page === 'checkout')}"
+          >
+            Products
+            <span
+              class="absolute left-0 -bottom-1 w-full h-0.5 bg-indigo-600 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"
+              :class="{'scale-x-100': page === 'products' || page === 'productDetail' || page === 'checkout'}"
+            ></span>
+          </button>
+          <button
+            v-if="orderId"
+            @click="goTo('orderStatus')"
+            class="relative group focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 rounded"
+            :class="{'text-indigo-600': page === 'orderStatus', 'hover:text-indigo-600': page !== 'orderStatus'}"
+          >
+            Order Status
+            <span
+              class="absolute left-0 -bottom-1 w-full h-0.5 bg-indigo-600 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"
+              :class="{'scale-x-100': page === 'orderStatus'}"
+            ></span>
+          </button>
+        </nav>
+        <button
+          @click="toggleMenu"
+          class="sm:hidden text-gray-700 focus:outline-none p-2 rounded hover:bg-indigo-100 transition"
+          aria-label="Toggle menu"
+          :aria-expanded="menuOpen.toString()"
+        >
+          <i class="fas fa-bars fa-lg"></i>
+        </button>
+      </div>
+      <transition name="fade-slide" mode="out-in">
+        <div
+          v-if="menuOpen"
+          class="sm:hidden bg-white shadow-md border-t border-gray-200"
+          role="menu"
+          aria-label="Mobile Navigation"
+        >
+          <nav class="flex flex-col space-y-2 p-4 text-gray-700 font-semibold select-none">
+            <button
+              @click="goTo('dashboard'); toggleMenu()"
+              class="text-left hover:text-indigo-600 focus:outline-none rounded px-2 py-1 transition"
+              role="menuitem"
+            >
+              Dashboard
+            </button>
+            <button
+              @click="goTo('products'); toggleMenu()"
+              class="text-left hover:text-indigo-600 focus:outline-none rounded px-2 py-1 transition"
+              role="menuitem"
+            >
+              Products
+            </button>
+            <button
+              v-if="orderId"
+              @click="goTo('orderStatus'); toggleMenu()"
+              class="text-left hover:text-indigo-600 focus:outline-none rounded px-2 py-1 transition"
+              role="menuitem"
+            >
+              Order Status
+            </button>
+          </nav>
+        </div>
+      </transition>
+    </header>
+
+    <!-- Main Content -->
+    <main
+      class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
+      role="main"
+      tabindex="-1"
+    >
+      <!-- Dashboard -->
+      <transition name="fade-slide" mode="out-in" appear>
+        <section v-if="page === 'dashboard'" key="dashboard" class="space-y-12">
+          <!-- Slider -->
+          <div
+            class="relative w-full max-w-4xl mx-auto rounded-xl shadow-2xl overflow-hidden ring-1 ring-indigo-200"
+            aria-label="Promotional slideshow"
+          >
+            <img
+              :src="slides[currentSlide].src"
+              :alt="slides[currentSlide].alt"
+              class="w-full h-64 sm:h-72 md:h-80 object-cover transition-transform duration-700 ease-in-out transform hover:scale-105"
+              loading="lazy"
+              role="img"
+            />
+            <button
+              @click="prevSlide"
+              aria-label="Previous slide"
+              class="absolute top-1/2 left-3 -translate-y-1/2 bg-indigo-600 bg-opacity-70 hover:bg-opacity-90 text-white rounded-full p-2 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+            >
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <button
+              @click="nextSlide"
+              aria-label="Next slide"
+              class="absolute top-1/2 right-3 -translate-y-1/2 bg-indigo-600 bg-opacity-70 hover:bg-opacity-90 text-white rounded-full p-2 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+            >
+              <i class="fas fa-chevron-right"></i>
+            </button>
+            <div
+              class="absolute bottom-3 left-1/2 -translate-x-1/2 flex space-x-3"
+              role="tablist"
+              aria-label="Slide navigation"
+            >
+              <button
+                v-for="(slide, index) in slides"
+                :key="index"
+                @click="currentSlide = index"
+                :aria-selected="(currentSlide === index).toString()"
+                :tabindex="currentSlide === index ? 0 : -1"
+                class="w-3 h-3 rounded-full focus:outline-none ring-2 ring-indigo-600 ring-offset-1"
+                :class="{
+                  'bg-indigo-600': currentSlide === index,
+                  'bg-indigo-300 hover:bg-indigo-500': currentSlide !== index
+                }"
+                :aria-label="'Slide ' + (index + 1)"
+              ></button>
+            </div>
+          </div>
+
+          <!-- Product Categories -->
+          <div
+            class="max-w-5xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-10"
+            aria-label="Product categories"
+          >
+            <button
+              v-for="cat in categories"
+              :key="cat.id"
+              @click="selectCategory(cat.id)"
+              class="flex flex-col items-center p-6 bg-white rounded-3xl shadow-lg hover:shadow-2xl transform hover:-translate-y-1 transition duration-500 focus:outline-none focus:ring-4 focus:ring-indigo-400 ripple"
+              :aria-label="'Browse ' + cat.name + ' products'"
+              tabindex="0"
+              @keydown.enter="selectCategory(cat.id)"
+            >
+              <i :class="cat.icon + ' fa-4x text-indigo-600 mb-4 transition-transform group-hover:scale-110'"></i>
+              <span class="font-semibold text-lg text-gray-900 select-none">{{ cat.name }}</span>
+            </button>
+          </div>
+        </section>
+      </transition>
+
+      <!-- Products List -->
+      <transition name="fade-slide" mode="out-in" appear>
+        <section v-if="page === 'products'" key="products" class="space-y-8">
+          <button
+            @click="goTo('dashboard')"
+            class="inline-flex items-center text-indigo-600 hover:text-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 rounded transition"
+            aria-label="Back to Dashboard"
+          >
+            <i class="fas fa-arrow-left mr-2"></i> Back to Dashboard
+          </button>
+          <h2
+            class="text-3xl font-extrabold mb-6 capitalize text-gray-900 select-none"
+            aria-live="polite"
+          >
+            {{ currentCategoryName }} Products
+          </h2>
+          <div
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 scrollbar-thin"
+            role="list"
+          >
+            <article
+              v-for="product in filteredProducts"
+              :key="product.id"
+              class="bg-white rounded-3xl shadow-lg hover:shadow-2xl transform hover:-translate-y-1 transition duration-500 cursor-pointer flex flex-col focus:outline-none focus:ring-4 focus:ring-indigo-400"
+              @click="selectProduct(product)"
+              tabindex="0"
+              @keydown.enter="selectProduct(product)"
+              role="listitem"
+              :aria-label="product.name + ', price $' + product.price.toFixed(2)"
+            >
+              <img
+                :src="product.thumbnail"
+                :alt="product.alt"
+                class="w-full h-52 object-cover rounded-t-3xl transition-transform duration-500 group-hover:scale-105"
+                loading="lazy"
+              />
+              <div class="p-6 flex flex-col flex-grow">
+                <h3 class="text-xl font-semibold text-gray-900 mb-3">{{ product.name }}</h3>
+                <p class="text-gray-700 flex-grow select-text">{{ product.shortDesc }}</p>
+                <div class="mt-6 text-indigo-600 font-extrabold text-2xl select-text">
+                  ${{ product.price.toFixed(2) }}
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+      </transition>
+
+      <!-- Product Detail & Buy -->
+      <transition name="fade-slide" mode="out-in" appear>
+        <section v-if="page === 'productDetail'" key="productDetail" class="space-y-8 max-w-5xl mx-auto">
+          <button
+            @click="goTo('products')"
+            class="inline-flex items-center text-indigo-600 hover:text-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 rounded transition"
+            aria-label="Back to Products"
+          >
+            <i class="fas fa-arrow-left mr-2"></i> Back to Products
+          </button>
+          <div
+            class="bg-white rounded-3xl shadow-2xl p-8 flex flex-col md:flex-row gap-10"
+            role="region"
+            aria-labelledby="product-title"
+          >
+            <img
+              :src="selectedProduct.thumbnail"
+              :alt="selectedProduct.alt"
+              class="w-full md:w-1/2 h-72 md:h-auto object-cover rounded-3xl shadow-lg transition-transform hover:scale-105"
+              loading="lazy"
+            />
+            <div class="flex flex-col justify-between md:w-1/2">
+              <div>
+                <h2
+                  id="product-title"
+                  class="text-4xl font-extrabold text-gray-900 mb-6 select-text"
+                >
+                  {{ selectedProduct.name }}
+                </h2>
+                <p class="text-gray-700 text-lg leading-relaxed select-text">
+                  {{ selectedProduct.description }}
+                </p>
+                <div
+                  class="text-indigo-600 font-extrabold text-3xl mt-8 select-text"
+                  aria-label="Price"
+                >
+                  ${{ selectedProduct.price.toFixed(2) }}
+                </div>
+              </div>
+              <button
+                @click="goTo('checkout')"
+                class="mt-10 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold py-4 rounded-3xl focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-offset-2 transition shadow-lg ripple"
+                aria-label="Buy now"
+              >
+                Buy Now
+              </button>
+            </div>
+          </div>
+        </section>
+      </transition>
+
+      <!-- Checkout -->
+      <transition name="fade-slide" mode="out-in" appear>
+        <section v-if="page === 'checkout'" key="checkout" class="max-w-md mx-auto space-y-8">
+          <button
+            @click="goTo('productDetail')"
+            class="inline-flex items-center text-indigo-600 hover:text-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 rounded transition"
+            aria-label="Back to Product Detail"
+          >
+            <i class="fas fa-arrow-left mr-2"></i> Back to Product
+          </button>
+          <div
+            class="bg-white rounded-3xl shadow-2xl p-8"
+            role="form"
+            aria-labelledby="checkout-title"
+          >
+            <h2
+              id="checkout-title"
+              class="text-3xl font-extrabold mb-6 text-gray-900 select-none"
+            >
+              Checkout
+            </h2>
+            <form @submit.prevent="handlePay" class="space-y-6" novalidate>
+              <div>
+                <label
+                  for="name"
+                  class="block text-gray-700 font-semibold mb-2 select-none"
+                >
+                  Name
+                </label>
+                <input
+                  id="name"
+                  v-model="checkoutForm.name"
+                  type="text"
+                  required
+                  autocomplete="name"
+                  class="w-full border border-gray-300 rounded-3xl px-4 py-3 focus:outline-none focus:ring-4 focus:ring-indigo-400 focus:border-indigo-600 transition shadow-sm"
+                  aria-required="true"
+                  aria-describedby="name-error"
+                />
+                <p
+                  v-if="nameError"
+                  id="name-error"
+                  class="text-red-600 mt-1 text-sm select-none"
+                  role="alert"
+                >
+                  Please enter your name.
+                </p>
+              </div>
+              <div>
+                <label
+                  for="email"
+                  class="block text-gray-700 font-semibold mb-2 select-none"
+                >
+                  Email
+                </label>
+                <input
+                  id="email"
+                  v-model="checkoutForm.email"
+                  type="email"
+                  required
+                  autocomplete="email"
+                  class="w-full border border-gray-300 rounded-3xl px-4 py-3 focus:outline-none focus:ring-4 focus:ring-indigo-400 focus:border-indigo-600 transition shadow-sm"
+                  aria-required="true"
+                  aria-describedby="email-error"
+                />
+                <p
+                  v-if="emailError"
+                  id="email-error"
+                  class="text-red-600 mt-1 text-sm select-none"
+                  role="alert"
+                >
+                  Please enter a valid email.
+                </p>
+              </div>
+              <div
+                class="text-indigo-600 font-extrabold text-3xl select-text"
+                aria-live="polite"
+                aria-atomic="true"
+              >
+                Total: ${{ selectedProduct.price.toFixed(2) }}
+              </div>
+              <button
+                type="submit"
+                class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold py-4 rounded-3xl focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-offset-2 transition shadow-lg ripple"
+                aria-label="Pay with PayPal"
+              >
+                Pay with PayPal
+              </button>
+            </form>
+          </div>
+        </section>
+      </transition>
+
+      <!-- Order Status -->
+      <transition name="fade-slide" mode="out-in" appear>
+        <section v-if="page === 'orderStatus'" key="orderStatus" class="max-w-md mx-auto space-y-8">
+          <button
+            @click="goTo('dashboard')"
+            class="inline-flex items-center text-indigo-600 hover:text-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 rounded transition"
+            aria-label="Back to Dashboard"
+          >
+            <i class="fas fa-arrow-left mr-2"></i> Back to Dashboard
+          </button>
+          <div
+            class="bg-white rounded-3xl shadow-2xl p-8 text-gray-900 select-text"
+            role="region"
+            aria-live="polite"
+            aria-atomic="true"
+            aria-label="Order status details"
+          >
+            <h2 class="text-3xl font-extrabold mb-6">Order Status</h2>
+            <p class="mb-3 text-lg"><span class="font-semibold">Order ID:</span> #{{ orderId }}</p>
+            <p class="mb-3 text-lg"><span class="font-semibold">Item:</span> {{ orderItem.name }}</p>
+            <p class="mb-3 text-lg"><span class="font-semibold">Price:</span> ${{ orderItem.price.toFixed(2) }}</p>
+            <p class="mb-8 text-lg">
+              <span class="font-semibold">Status:</span>
+              <span
+                :class="{
+                  'text-yellow-500 font-bold': orderStatus === 'pending',
+                  'text-green-600 font-bold': orderStatus === 'success'
+                }"
+              >
+                {{ orderStatus }}
+              </span>
+            </p>
+            <button
+              v-if="orderStatus === 'pending'"
+              @click="payOrderAgain"
+              class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold py-4 rounded-3xl focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-offset-2 transition shadow-lg ripple"
+              aria-label="Pay Now"
+            >
+              Pay Now
+            </button>
+            <a
+              v-if="orderStatus === 'success'"
+              :href="orderItem.downloadLink"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="block w-full text-center bg-green-600 hover:bg-green-700 text-white font-extrabold py-4 rounded-3xl focus:outline-none focus:ring-4 focus:ring-green-500 focus:ring-offset-2 transition shadow-lg"
+              aria-label="Download purchased product"
+            >
+              Click to Download Product
+            </a>
+          </div>
+        </section>
+      </transition>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script>
+    const { createApp, ref, reactive, computed, onMounted, watch } = Vue;
+
+    createApp({
+      setup() {
+        const page = ref('dashboard');
+        const menuOpen = ref(false);
+        const currentSlide = ref(0);
+        const slides = [
+          {
+            src: 'https://placehold.co/800x256/png?text=Promo+1+-+Special+Offer+on+Websites',
+            alt: 'Promo banner showing special offer on websites with bright colors and text',
+          },
+          {
+            src: 'https://placehold.co/800x256/png?text=Promo+2+-+Discount+on+Scripts',
+            alt: 'Promo banner showing discount on scripts with code snippets and discount text',
+          },
+          {
+            src: 'https://placehold.co/800x256/png?text=Promo+3+-+New+Templates+Available',
+            alt: 'Promo banner showing new templates available with colorful design and text',
+          },
+        ];
+
+        // Categories with icons
+        const categories = [
+          { id: 'website', name: 'Website', icon: 'fas fa-globe' },
+          { id: 'script', name: 'Script', icon: 'fas fa-code' },
+          { id: 'template', name: 'Template', icon: 'fas fa-file-code' },
+          { id: 'plugin', name: 'Plugin', icon: 'fas fa-plug' },
+        ];
+
+        // Products data
+        const products = [
+          // Website products
+          {
+            id: 1,
+            category: 'website',
+            name: 'Modern Portfolio Website',
+            shortDesc: 'A sleek portfolio website template for creatives.',
+            description:
+              'This modern portfolio website template is fully responsive and easy to customize. Perfect for showcasing your work and skills.',
+            price: 10.0,
+            thumbnail: 'https://placehold.co/400x300/png?text=Modern+Portfolio+Website',
+            alt: 'Thumbnail image of a modern portfolio website with clean design and images',
+            downloadLink: 'https://example.com/downloads/modern-portfolio-website.zip',
+          },
+          {
+            id: 2,
+            category: 'website',
+            name: 'E-commerce Website Template',
+            shortDesc: 'A complete e-commerce website template with shopping cart.',
+            description:
+              'This e-commerce website template includes product pages, shopping cart, and checkout pages. Easy to set up and customize.',
+            price: 15.0,
+            thumbnail: 'https://placehold.co/400x300/png?text=E-commerce+Website+Template',
+            alt: 'Thumbnail image of an e-commerce website template showing product listings and cart',
+            downloadLink: 'https://example.com/downloads/ecommerce-website-template.zip',
+          },
+          {
+            id: 3,
+            category: 'website',
+            name: 'Blog Website Template',
+            shortDesc: 'A clean and minimal blog website template.',
+            description:
+              'This blog website template is designed for bloggers who want a clean and minimalistic design with easy navigation.',
+            price: 8.0,
+            thumbnail: 'https://placehold.co/400x300/png?text=Blog+Website+Template',
+            alt: 'Thumbnail image of a blog website template with articles and sidebar',
+            downloadLink: 'https://example.com/downloads/blog-website-template.zip',
+          },
+          // Script products
+          {
+            id: 4,
+            category: 'script',
+            name: 'JavaScript To-Do List',
+            shortDesc: 'A simple to-do list script with local storage.',
+            description:
+              'This JavaScript to-do list script allows users to add, delete, and save tasks in local storage. Easy to integrate into any website.',
+            price: 5.0,
+            thumbnail: 'https://placehold.co/400x300/png?text=JavaScript+To-Do+List',
+            alt: 'Thumbnail image showing a JavaScript to-do list app interface with tasks',
+            downloadLink: 'https://example.com/downloads/js-todo-list.zip',
+          },
+          {
+            id: 5,
+            category: 'script',
+            name: 'PHP Contact Form',
+            shortDesc: 'A secure PHP contact form script.',
+            description:
+              'This PHP contact form script includes validation and spam protection. Easy to customize and integrate.',
+            price: 7.0,
+            thumbnail: 'https://placehold.co/400x300/png?text=PHP+Contact+Form',
+            alt: 'Thumbnail image showing a PHP contact form with input fields and submit button',
+            downloadLink: 'https://example.com/downloads/php-contact-form.zip',
+          },
+          {
+            id: 6,
+            category: 'script',
+            name: 'Image Slider Script',
+            shortDesc: 'A responsive image slider script in JavaScript.',
+            description:
+              'This image slider script is fully responsive and supports touch gestures. Easy to customize and embed.',
+            price: 6.0,
+            thumbnail: 'https://placehold.co/400x300/png?text=Image+Slider+Script',
+            alt: 'Thumbnail image showing an image slider with navigation arrows and images',
+            downloadLink: 'https://example.com/downloads/image-slider-script.zip',
+          },
+          // Template products
+          {
+            id: 7,
+            category: 'template',
+            name: 'Admin Dashboard Template',
+            shortDesc: 'A clean admin dashboard template built with Tailwind CSS.',
+            description:
+              'This admin dashboard template includes charts, tables, and responsive layout. Perfect for web apps and admin panels.',
+            price: 12.0,
+            thumbnail: 'https://placehold.co/400x300/png?text=Admin+Dashboard+Template',
+            alt: 'Thumbnail image of an admin dashboard template with charts and navigation',
+            downloadLink: 'https://example.com/downloads/admin-dashboard-template.zip',
+          },
+          {
+            id: 8,
+            category: 'template',
+            name: 'Landing Page Template',
+            shortDesc: 'A modern landing page template for startups.',
+            description:
+              'This landing page template is designed to convert visitors with clear call-to-actions and responsive design.',
+            price: 9.0,
+            thumbnail: 'https://placehold.co/400x300/png?text=Landing+Page+Template',
+            alt: 'Thumbnail image of a landing page template with hero section and call-to-action',
+            downloadLink: 'https://example.com/downloads/landing-page-template.zip',
+          },
+          {
+            id: 9,
+            category: 'template',
+            name: 'Newsletter Template',
+            shortDesc: 'A responsive email newsletter template.',
+            description:
+              'This newsletter template is compatible with major email clients and easy to customize.',
+            price: 4.0,
+            thumbnail: 'https://placehold.co/400x300/png?text=Newsletter+Template',
+            alt: 'Thumbnail image of an email newsletter template with text and images',
+            downloadLink: 'https://example.com/downloads/newsletter-template.zip',
+          },
+          // Plugin products
+          {
+            id: 10,
+            category: 'plugin',
+            name: 'WordPress SEO Plugin',
+            shortDesc: 'A plugin to improve SEO on WordPress sites.',
+            description:
+              'This WordPress SEO plugin helps optimize your site for search engines with easy settings and analysis.',
+            price: 20.0,
+            thumbnail: 'https://placehold.co/400x300/png?text=WordPress+SEO+Plugin',
+            alt: 'Thumbnail image of WordPress SEO plugin interface with graphs and settings',
+            downloadLink: 'https://example.com/downloads/wp-seo-plugin.zip',
+          },
+          {
+            id: 11,
+            category: 'plugin',
+            name: 'jQuery Carousel Plugin',
+            shortDesc: 'A responsive carousel plugin for jQuery.',
+            description:
+              'This jQuery carousel plugin supports multiple layouts and touch gestures. Easy to integrate.',
+            price: 8.0,
+            thumbnail: 'https://placehold.co/400x300/png?text=jQuery+Carousel+Plugin',
+            alt: 'Thumbnail image showing a carousel plugin with images and navigation dots',
+            downloadLink: 'https://example.com/downloads/jquery-carousel-plugin.zip',
+          },
+          {
+            id: 12,
+            category: 'plugin',
+            name: 'Chat Support Plugin',
+            shortDesc: 'A live chat support plugin for websites.',
+            description:
+              'This chat support plugin allows real-time communication with visitors. Customizable and easy to install.',
+            price: 18.0,
+            thumbnail: 'https://placehold.co/400x300/png?text=Chat+Support+Plugin',
+            alt: 'Thumbnail image showing a chat support plugin interface with chat bubbles',
+            downloadLink: 'https://example.com/downloads/chat-support-plugin.zip',
+          },
+        ];
+
+        const currentCategory = ref('');
+        const currentCategoryName = computed(() => {
+          const cat = categories.find((c) => c.id === currentCategory.value);
+          return cat ? cat.name : '';
+        });
+        const filteredProducts = computed(() =>
+          products.filter((p) => p.category === currentCategory.value)
+        );
+
+        const selectedProduct = ref(null);
+
+        const checkoutForm = reactive({
+          name: '',
+          email: '',
+        });
+
+        const orderId = ref(null);
+        const orderItem = reactive({
+          id: null,
+          name: '',
+          price: 0,
+          downloadLink: '',
+        });
+        const orderStatus = ref('pending');
+
+        // Validation errors
+        const nameError = ref(false);
+        const emailError = ref(false);
+
+        // Navigation
+        function goTo(target) {
+          page.value = target;
+          if (target === 'dashboard') {
+            currentCategory.value = '';
+            selectedProduct.value = null;
+            checkoutForm.name = '';
+            checkoutForm.email = '';
+            nameError.value = false;
+            emailError.value = false;
+          }
+          if (target === 'products' && !currentCategory.value) {
+            currentCategory.value = 'website';
+          }
+          if (target === 'orderStatus') {
+            // nothing special
+          }
+          menuOpen.value = false;
+          // Focus main content for accessibility
+          setTimeout(() => {
+            const main = document.querySelector('main[role="main"]');
+            if (main) main.focus();
+          }, 300);
+        }
+
+        // Toggle mobile menu
+        function toggleMenu() {
+          menuOpen.value = !menuOpen.value;
+        }
+
+        // Select category and go to products page
+        function selectCategory(cat) {
+          currentCategory.value = cat;
+          goTo('products');
+        }
+
+        // Select product and go to detail page
+        function selectProduct(product) {
+          selectedProduct.value = product;
+          goTo('productDetail');
+        }
+
+        // PayPal payment flow
+        async function handlePay() {
+          nameError.value = !checkoutForm.name.trim();
+          emailError.value = !validateEmail(checkoutForm.email);
+
+          if (nameError.value || emailError.value) {
+            return;
+          }
+
+          // Save order info
+          orderId.value = generateOrderId();
+          orderItem.id = selectedProduct.value.id;
+          orderItem.name = selectedProduct.value.name;
+          orderItem.price = selectedProduct.value.price;
+          orderItem.downloadLink = selectedProduct.value.downloadLink;
+          orderStatus.value = 'pending';
+
+          // Open PayPal payment window
+          const paypalUrl = createPaypalUrl(orderItem.price, orderId.value);
+          const paypalWindow = window.open(
+            paypalUrl,
+            'PayPal Payment',
+            'width=500,height=700'
+          );
+
+          // Polling for payment completion simulation
+          const checkPaymentInterval = setInterval(() => {
+            if (paypalWindow.closed) {
+              clearInterval(checkPaymentInterval);
+              // Simulate payment success for demo
+              orderStatus.value = 'success';
+              goTo('orderStatus');
+            }
+          }, 1000);
+        }
+
+        // Create PayPal payment URL with clientId and amount
+        function createPaypalUrl(amount, orderId) {
+          // Using PayPal checkout link with amount and return url
+          // For demo, we simulate with PayPal sandbox checkout page
+          // Real integration requires server-side and SDK usage
+          // We'll use PayPal sandbox checkout link with amount param and return url to orderStatus page
+
+          // We'll encode orderId in return url query param
+          const returnUrl = encodeURIComponent(
+            window.location.origin + '?orderId=' + orderId
+          );
+          // PayPal sandbox checkout link (simulate)
+          // This is a placeholder, real integration requires server-side or PayPal JS SDK
+          return `https://www.sandbox.paypal.com/checkoutnow?amount=${amount}&currency=USD&returnUrl=${returnUrl}`;
+        }
+
+        // Pay again button on order status page
+        function payOrderAgain() {
+          if (!orderItem.price || !orderId.value) return;
+          const paypalUrl = createPaypalUrl(orderItem.price, orderId.value);
+          const paypalWindow = window.open(
+            paypalUrl,
+            'PayPal Payment',
+            'width=500,height=700'
+          );
+
+          const checkPaymentInterval = setInterval(() => {
+            if (paypalWindow.closed) {
+              clearInterval(checkPaymentInterval);
+              orderStatus.value = 'success';
+              goTo('orderStatus');
+            }
+          }, 1000);
+        }
+
+        // Generate a random order id for demo
+        function generateOrderId() {
+          return Math.floor(100000 + Math.random() * 900000);
+        }
+
+        // Email validation helper
+        function validateEmail(email) {
+          const re =
+            /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@(([^<>()[\]\\.,;:\s@"]+\.)+[^<>()[\]\\.,;:\s@"]{2,})$/i;
+          return re.test(email);
+        }
+
+        // On mounted, check if URL has orderId param to simulate returning from PayPal
+        onMounted(() => {
+          const params = new URLSearchParams(window.location.search);
+          const oid = params.get('orderId');
+          if (oid) {
+            // Simulate fetching order info from local storage or server
+            // For demo, just set orderId and success status
+            orderId.value = oid;
+            // Find product by orderId? We don't have mapping, so just fake:
+            // We'll just pick first product for demo
+            const product = products[0];
+            orderItem.id = product.id;
+            orderItem.name = product.name;
+            orderItem.price = product.price;
+            orderItem.downloadLink = product.downloadLink;
+            orderStatus.value = 'success';
+            page.value = 'orderStatus';
+
+            // Clean URL params
+            window.history.replaceState({}, document.title, window.location.pathname);
+          }
+        });
+
+        // Auto slide every 5 seconds with pause on hover
+        let slideInterval = null;
+        function startSlideInterval() {
+          slideInterval = setInterval(() => {
+            currentSlide.value = (currentSlide.value + 1) % slides.length;
+          }, 5000);
+        }
+        function stopSlideInterval() {
+          if (slideInterval) clearInterval(slideInterval);
+        }
+
+        onMounted(() => {
+          startSlideInterval();
+        });
+
+        // Manual slide controls
+        function prevSlide() {
+          stopSlideInterval();
+          currentSlide.value =
+            (currentSlide.value - 1 + slides.length) % slides.length;
+          startSlideInterval();
+        }
+        function nextSlide() {
+          stopSlideInterval();
+          currentSlide.value = (currentSlide.value + 1) % slides.length;
+          startSlideInterval();
+        }
+
+        return {
+          page,
+          menuOpen,
+          toggleMenu,
+          goTo,
+          slides,
+          currentSlide,
+          prevSlide,
+          nextSlide,
+          categories,
+          currentCategory,
+          currentCategoryName,
+          selectCategory,
+          products,
+          filteredProducts,
+          selectedProduct,
+          selectProduct,
+          checkoutForm,
+          handlePay,
+          orderId,
+          orderItem,
+          orderStatus,
+          payOrderAgain,
+          nameError,
+          emailError,
+        };
+      },
+    }).mount('#app');
+  </script>
+</body>
+</html>
