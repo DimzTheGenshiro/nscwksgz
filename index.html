@@ -1,0 +1,748 @@
+<html lang="en" class="scroll-smooth" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Digital Product Store - AutomationBot</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+
+  <div id="app" class="flex-grow flex flex-col">
+    <!-- Header -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+        <a href="#" @click.prevent="goTo('dashboard')" class="text-2xl font-bold text-indigo-600 hover:text-indigo-700 flex items-center space-x-2">
+          <i class="fas fa-cogs"></i>
+          <span>AutomationBot</span>
+        </a>
+        <nav class="hidden md:flex space-x-6 font-semibold text-gray-700">
+          <a href="#" @click.prevent="goTo('dashboard')" class="hover:text-indigo-600 transition">Dashboard</a>
+          <a href="#" @click.prevent="goTo('products')" class="hover:text-indigo-600 transition">Produk</a>
+          <a href="#" @click.prevent="goTo('status')" class="hover:text-indigo-600 transition">Status Order</a>
+          <a href="#" @click.prevent="goTo('payment')" class="hover:text-indigo-600 transition">Pembayaran</a>
+        </nav>
+        <button @click="toggleMobileMenu" class="md:hidden text-gray-600 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded">
+          <i class="fas fa-bars fa-lg"></i>
+        </button>
+      </div>
+      <!-- Mobile Menu -->
+      <nav v-if="mobileMenuOpen" class="md:hidden bg-white border-t border-gray-200">
+        <a href="#" @click.prevent="goTo('dashboard'); toggleMobileMenu()" class="block px-4 py-3 border-b border-gray-200 hover:bg-indigo-50 font-semibold text-indigo-700">Dashboard</a>
+        <a href="#" @click.prevent="goTo('products'); toggleMobileMenu()" class="block px-4 py-3 border-b border-gray-200 hover:bg-indigo-50 font-semibold text-indigo-700">Produk</a>
+        <a href="#" @click.prevent="goTo('status'); toggleMobileMenu()" class="block px-4 py-3 border-b border-gray-200 hover:bg-indigo-50 font-semibold text-indigo-700">Status Order</a>
+        <a href="#" @click.prevent="goTo('payment'); toggleMobileMenu()" class="block px-4 py-3 hover:bg-indigo-50 font-semibold text-indigo-700">Pembayaran</a>
+      </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+      <!-- Dashboard -->
+      <section v-if="page === 'dashboard'">
+        <h1 class="text-3xl font-extrabold text-gray-900 mb-6">Dashboard</h1>
+
+        <!-- Slider -->
+        <div class="relative w-full max-w-4xl mx-auto mb-10">
+          <div class="overflow-hidden rounded-lg shadow-lg">
+            <img
+              :src="slides[currentSlide].src"
+              :alt="slides[currentSlide].alt"
+              class="w-full h-64 object-cover sm:h-80 md:h-96"
+              loading="lazy"
+            />
+          </div>
+          <div class="absolute inset-0 flex items-center justify-between px-4">
+            <button
+              @click="prevSlide"
+              class="bg-indigo-600 bg-opacity-70 hover:bg-opacity-90 text-white rounded-full p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              aria-label="Previous Slide"
+            >
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <button
+              @click="nextSlide"
+              class="bg-indigo-600 bg-opacity-70 hover:bg-opacity-90 text-white rounded-full p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              aria-label="Next Slide"
+            >
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+          <div class="flex justify-center mt-3 space-x-2">
+            <button
+              v-for="(slide, index) in slides"
+              :key="index"
+              @click="goToSlide(index)"
+              :class="{'bg-indigo-600': currentSlide === index, 'bg-gray-300': currentSlide !== index}"
+              class="w-3 h-3 rounded-full focus:outline-none"
+              :aria-label="'Go to slide ' + (index + 1)"
+            ></button>
+          </div>
+        </div>
+
+        <!-- Produk Categories -->
+        <div class="max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-8 text-center">
+          <button
+            @click="selectCategory('website')"
+            class="flex flex-col items-center p-4 bg-white rounded-lg shadow hover:shadow-lg transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            aria-label="Pilih produk Website"
+          >
+            <img
+              src="https://placehold.co/80x80/png?text=Website+Icon"
+              alt="Icon digital product category website, a stylized globe with code brackets"
+              class="mb-3"
+              loading="lazy"
+            />
+            <span class="font-semibold text-gray-700">Website</span>
+          </button>
+          <button
+            @click="selectCategory('script')"
+            class="flex flex-col items-center p-4 bg-white rounded-lg shadow hover:shadow-lg transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            aria-label="Pilih produk Script"
+          >
+            <img
+              src="https://placehold.co/80x80/png?text=Script+Icon"
+              alt="Icon digital product category script, a stylized code file with brackets and lines"
+              class="mb-3"
+              loading="lazy"
+            />
+            <span class="font-semibold text-gray-700">Script</span>
+          </button>
+          <button
+            @click="selectCategory('template')"
+            class="flex flex-col items-center p-4 bg-white rounded-lg shadow hover:shadow-lg transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            aria-label="Pilih produk Template"
+          >
+            <img
+              src="https://placehold.co/80x80/png?text=Template+Icon"
+              alt="Icon digital product category template, a stylized layered paper sheets"
+              class="mb-3"
+              loading="lazy"
+            />
+            <span class="font-semibold text-gray-700">Template</span>
+          </button>
+          <button
+            @click="selectCategory('ebook')"
+            class="flex flex-col items-center p-4 bg-white rounded-lg shadow hover:shadow-lg transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            aria-label="Pilih produk Ebook"
+          >
+            <img
+              src="https://placehold.co/80x80/png?text=Ebook+Icon"
+              alt="Icon digital product category ebook, an open book with digital pixels"
+              class="mb-3"
+              loading="lazy"
+            />
+            <span class="font-semibold text-gray-700">Ebook</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Produk List -->
+      <section v-if="page === 'products'">
+        <button
+          @click="goTo('dashboard')"
+          class="mb-6 inline-flex items-center space-x-2 text-indigo-600 hover:text-indigo-800 font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded"
+          aria-label="Kembali ke dashboard"
+        >
+          <i class="fas fa-arrow-left"></i>
+          <span>Kembali</span>
+        </button>
+        <h2 class="text-3xl font-extrabold text-gray-900 mb-6 capitalize">Produk: {{ currentCategory }}</h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <article
+            v-for="product in filteredProducts"
+            :key="product.id"
+            class="bg-white rounded-lg shadow hover:shadow-lg transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            @click="selectProduct(product.id)"
+            tabindex="0"
+            @keydown.enter="selectProduct(product.id)"
+            :aria-label="'Lihat detail produk ' + product.name"
+          >
+            <img
+              :src="product.thumbnail"
+              :alt="product.alt"
+              class="w-full h-48 object-cover rounded-t-lg"
+              loading="lazy"
+            />
+            <div class="p-4">
+              <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ product.name }}</h3>
+              <p class="text-indigo-600 font-bold text-xl">${{ product.price.toFixed(2) }}</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Produk Detail -->
+      <section v-if="page === 'productDetail'">
+        <button
+          @click="goTo('products')"
+          class="mb-6 inline-flex items-center space-x-2 text-indigo-600 hover:text-indigo-800 font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded"
+          aria-label="Kembali ke daftar produk"
+        >
+          <i class="fas fa-arrow-left"></i>
+          <span>Kembali</span>
+        </button>
+
+        <article class="bg-white rounded-lg shadow p-6 max-w-4xl mx-auto">
+          <img
+            :src="selectedProduct.thumbnail"
+            :alt="selectedProduct.alt"
+            class="w-full h-64 sm:h-96 object-cover rounded-lg mb-6"
+            loading="lazy"
+          />
+          <h2 class="text-3xl font-extrabold text-gray-900 mb-4">{{ selectedProduct.name }}</h2>
+          <p class="text-gray-700 mb-6 whitespace-pre-line">{{ selectedProduct.description }}</p>
+          <p class="text-indigo-600 font-bold text-2xl mb-6">${{ selectedProduct.price.toFixed(2) }}</p>
+
+          <button
+            @click="goTo('buy')"
+            class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition w-full sm:w-auto"
+            aria-label="Beli produk ini"
+          >
+            Buy Now
+          </button>
+        </article>
+      </section>
+
+      <!-- Buy Form -->
+      <section v-if="page === 'buy'">
+        <button
+          @click="goTo('productDetail')"
+          class="mb-6 inline-flex items-center space-x-2 text-indigo-600 hover:text-indigo-800 font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded"
+          aria-label="Kembali ke detail produk"
+        >
+          <i class="fas fa-arrow-left"></i>
+          <span>Kembali</span>
+        </button>
+
+        <form @submit.prevent="submitOrder" class="bg-white rounded-lg shadow p-6 max-w-md mx-auto space-y-6">
+          <h2 class="text-2xl font-extrabold text-gray-900 mb-4">Pembayaran</h2>
+
+          <div>
+            <label for="name" class="block text-gray-700 font-semibold mb-1">Nama Lengkap</label>
+            <input
+              id="name"
+              v-model="orderForm.name"
+              type="text"
+              required
+              placeholder="Masukkan nama lengkap"
+              class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              aria-required="true"
+            />
+          </div>
+
+          <div>
+            <label for="whatsapp" class="block text-gray-700 font-semibold mb-1">Nomor WhatsApp</label>
+            <input
+              id="whatsapp"
+              v-model="orderForm.whatsapp"
+              type="tel"
+              pattern="^\+?\d{9,15}$"
+              required
+              placeholder="Contoh: +6281234567890"
+              class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              aria-required="true"
+            />
+            <p class="text-xs text-gray-500 mt-1">Masukkan nomor WhatsApp dengan kode negara, misal +62</p>
+          </div>
+
+          <div>
+            <p class="text-lg font-semibold text-indigo-600">Total: ${{ selectedProduct.price.toFixed(2) }}</p>
+          </div>
+
+          <button
+            type="submit"
+            :disabled="isPaying"
+            class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition w-full disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label="Bayar dengan PayPal"
+          >
+            <i class="fab fa-paypal mr-2"></i> Pay with PayPal
+          </button>
+        </form>
+      </section>
+
+      <!-- Status Order -->
+      <section v-if="page === 'status'">
+        <h1 class="text-3xl font-extrabold text-gray-900 mb-6">Status Order</h1>
+
+        <div v-if="orders.length === 0" class="text-center text-gray-600">
+          Belum ada order. Silakan beli produk terlebih dahulu.
+        </div>
+
+        <div v-else class="space-y-6 max-w-4xl mx-auto">
+          <article
+            v-for="order in orders"
+            :key="order.id"
+            class="bg-white rounded-lg shadow p-6"
+            :aria-live="'polite'"
+          >
+            <p class="font-semibold text-lg text-gray-900 mb-1">Order ID: <span class="text-indigo-600">#{{ order.id }}</span></p>
+            <p class="mb-1">Item: <span class="font-semibold">{{ order.productName }}</span></p>
+            <p class="mb-1">Price: <span class="font-semibold text-indigo-600">${{ order.price.toFixed(2) }}</span></p>
+            <p class="mb-4">Status: 
+              <span
+                :class="{
+                  'text-yellow-600 font-semibold': order.status === 'pending',
+                  'text-green-600 font-semibold': order.status === 'success',
+                  'text-red-600 font-semibold': order.status === 'failed'
+                }"
+              >
+                {{ order.status === 'pending' ? 'Pending' : order.status === 'success' ? 'Success' : 'Failed' }}
+              </span>
+            </p>
+
+            <div v-if="order.status === 'pending'">
+              <button
+                @click="payOrder(order.id)"
+                class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                aria-label="Bayar order ini"
+              >
+                Bayar Sekarang
+              </button>
+            </div>
+
+            <div v-if="order.status === 'success'" class="mt-4">
+              <p class="font-semibold text-green-700 mb-2">Order berhasil!</p>
+              <a
+                :href="order.downloadLink"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-block bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+                aria-label="Klik untuk download produk"
+              >
+                Klik untuk download link produk
+              </a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Pembayaran (redirect page) -->
+      <section v-if="page === 'payment'">
+        <h1 class="text-3xl font-extrabold text-gray-900 mb-6">Pembayaran</h1>
+        <p class="text-center text-gray-700 mb-6">Sedang mengarahkan ke PayPal...</p>
+      </section>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-gray-200 py-6 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-500 text-sm select-none">
+      © AutomationBot | 2025
+    </div>
+  </footer>
+
+  <!-- Vue 3 CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <!-- PayPal SDK -->
+  <script src="https://www.paypal.com/sdk/js?client-id=Ae2UJcfqNOymRYYKMYnE17sXEXBaW8tJF_NZ3M5huk1DREqaMHG_53DcgtePpGv-KXvSBNPxkTfJzboY&currency=USD"></script>
+
+  <script>
+    const { createApp, ref, reactive, computed, onMounted } = Vue;
+
+    createApp({
+      setup() {
+        // Pages: dashboard, products, productDetail, buy, status, payment
+        const page = ref('dashboard');
+        const mobileMenuOpen = ref(false);
+
+        // Slider images
+        const slides = [
+          {
+            src: 'https://placehold.co/1200x400/png?text=Promo+1:+Diskon+50%25+untuk+produk+website&font=roboto',
+            alt: 'Promo banner showing 50% discount for website products, bright and attractive design with digital theme',
+          },
+          {
+            src: 'https://placehold.co/1200x400/png?text=Promo+2:+Beli+2+script+dapat+1+gratis&font=roboto',
+            alt: 'Promo banner showing buy 2 scripts get 1 free, with coding and digital icons background',
+          },
+          {
+            src: 'https://placehold.co/1200x400/png?text=Promo+3:+Ebook+gratis+untuk+pembelian+template&font=roboto',
+            alt: 'Promo banner showing free ebook for template purchases, with book and digital graphics',
+          },
+        ];
+        const currentSlide = ref(0);
+        let slideInterval = null;
+
+        function nextSlide() {
+          currentSlide.value = (currentSlide.value + 1) % slides.length;
+        }
+        function prevSlide() {
+          currentSlide.value = (currentSlide.value - 1 + slides.length) % slides.length;
+        }
+        function goToSlide(index) {
+          currentSlide.value = index;
+        }
+        function startSlideShow() {
+          slideInterval = setInterval(() => {
+            nextSlide();
+          }, 5000);
+        }
+        function stopSlideShow() {
+          clearInterval(slideInterval);
+        }
+
+        // Categories and products
+        const currentCategory = ref('');
+        const products = [
+          // Website products
+          {
+            id: 'w1',
+            category: 'website',
+            name: 'Website Company Profile',
+            description: 'Website company profile profesional dengan desain responsif dan modern.\nCocok untuk bisnis dan portofolio.',
+            price: 10,
+            thumbnail: 'https://placehold.co/600x400/png?text=Website+Company+Profile',
+            alt: 'Thumbnail of Website Company Profile product showing a modern business website layout',
+            downloadLink: 'https://example.com/downloads/website-company-profile.zip',
+          },
+          {
+            id: 'w2',
+            category: 'website',
+            name: 'Website Toko Online',
+            description: 'Website toko online lengkap dengan fitur pembayaran dan manajemen produk.\nMudah digunakan dan dioptimalkan SEO.',
+            price: 15,
+            thumbnail: 'https://placehold.co/600x400/png?text=Website+Toko+Online',
+            alt: 'Thumbnail of Website Toko Online product showing an e-commerce website layout with product listings',
+            downloadLink: 'https://example.com/downloads/website-toko-online.zip',
+          },
+          {
+            id: 'w3',
+            category: 'website',
+            name: 'Landing Page Produk',
+            description: 'Landing page produk yang menarik dan konversi tinggi.\nCocok untuk promosi produk baru.',
+            price: 8,
+            thumbnail: 'https://placehold.co/600x400/png?text=Landing+Page+Produk',
+            alt: 'Thumbnail of Landing Page Produk product showing a clean and modern landing page design',
+            downloadLink: 'https://example.com/downloads/landing-page-produk.zip',
+          },
+          // Script products
+          {
+            id: 's1',
+            category: 'script',
+            name: 'Script Otomatisasi Email',
+            description: 'Script otomatisasi pengiriman email marketing dengan fitur personalisasi.\nMudah diintegrasikan.',
+            price: 5,
+            thumbnail: 'https://placehold.co/600x400/png?text=Script+Otomatisasi+Email',
+            alt: 'Thumbnail of Script Otomatisasi Email product showing code editor with email automation script',
+            downloadLink: 'https://example.com/downloads/script-otomatisasi-email.zip',
+          },
+          {
+            id: 's2',
+            category: 'script',
+            name: 'Script Backup Database',
+            description: 'Script backup database otomatis dengan jadwal harian.\nAman dan mudah digunakan.',
+            price: 7,
+            thumbnail: 'https://placehold.co/600x400/png?text=Script+Backup+Database',
+            alt: 'Thumbnail of Script Backup Database product showing database icon and code snippet',
+            downloadLink: 'https://example.com/downloads/script-backup-database.zip',
+          },
+          {
+            id: 's3',
+            category: 'script',
+            name: 'Script Chatbot WhatsApp',
+            description: 'Script chatbot WhatsApp untuk layanan pelanggan otomatis.\nMendukung pesan teks dan media.',
+            price: 12,
+            thumbnail: 'https://placehold.co/600x400/png?text=Script+Chatbot+WhatsApp',
+            alt: 'Thumbnail of Script Chatbot WhatsApp product showing WhatsApp logo and chatbot conversation',
+            downloadLink: 'https://example.com/downloads/script-chatbot-whatsapp.zip',
+          },
+          // Template products
+          {
+            id: 't1',
+            category: 'template',
+            name: 'Template Email Marketing',
+            description: 'Template email marketing profesional dan responsif.\nMudah disesuaikan untuk berbagai kebutuhan.',
+            price: 6,
+            thumbnail: 'https://placehold.co/600x400/png?text=Template+Email+Marketing',
+            alt: 'Thumbnail of Template Email Marketing product showing email layout with images and text',
+            downloadLink: 'https://example.com/downloads/template-email-marketing.zip',
+          },
+          {
+            id: 't2',
+            category: 'template',
+            name: 'Template Presentasi PowerPoint',
+            description: 'Template presentasi PowerPoint modern dan elegan.\nCocok untuk bisnis dan edukasi.',
+            price: 9,
+            thumbnail: 'https://placehold.co/600x400/png?text=Template+Presentasi+PowerPoint',
+            alt: 'Thumbnail of Template Presentasi PowerPoint product showing slide thumbnails with charts',
+            downloadLink: 'https://example.com/downloads/template-presentasi-ppt.zip',
+          },
+          {
+            id: 't3',
+            category: 'template',
+            name: 'Template Website Portfolio',
+            description: 'Template website portfolio kreatif dan responsif.\nMudah dikustomisasi.',
+            price: 11,
+            thumbnail: 'https://placehold.co/600x400/png?text=Template+Website+Portfolio',
+            alt: 'Thumbnail of Template Website Portfolio product showing creative portfolio website layout',
+            downloadLink: 'https://example.com/downloads/template-website-portfolio.zip',
+          },
+          // Ebook products
+          {
+            id: 'e1',
+            category: 'ebook',
+            name: 'Ebook Panduan Digital Marketing',
+            description: 'Ebook lengkap panduan digital marketing untuk pemula hingga mahir.\nDilengkapi contoh dan strategi.',
+            price: 4,
+            thumbnail: 'https://placehold.co/600x400/png?text=Ebook+Panduan+Digital+Marketing',
+            alt: 'Thumbnail of Ebook Panduan Digital Marketing product showing ebook cover with marketing icons',
+            downloadLink: 'https://example.com/downloads/ebook-panduan-digital-marketing.pdf',
+          },
+          {
+            id: 'e2',
+            category: 'ebook',
+            name: 'Ebook Pemrograman JavaScript',
+            description: 'Ebook lengkap belajar pemrograman JavaScript dari dasar hingga lanjutan.\nCocok untuk developer.',
+            price: 5,
+            thumbnail: 'https://placehold.co/600x400/png?text=Ebook+Pemrograman+JavaScript',
+            alt: 'Thumbnail of Ebook Pemrograman JavaScript product showing ebook cover with code snippets',
+            downloadLink: 'https://example.com/downloads/ebook-pemrograman-javascript.pdf',
+          },
+          {
+            id: 'e3',
+            category: 'ebook',
+            name: 'Ebook Desain UI/UX',
+            description: 'Ebook panduan desain UI/UX modern dan praktis.\nDilengkapi contoh dan tools terbaik.',
+            price: 6,
+            thumbnail: 'https://placehold.co/600x400/png?text=Ebook+Desain+UI%2FUX',
+            alt: 'Thumbnail of Ebook Desain UI/UX product showing ebook cover with design wireframes',
+            downloadLink: 'https://example.com/downloads/ebook-desain-ui-ux.pdf',
+          },
+        ];
+
+        const filteredProducts = computed(() => {
+          if (!currentCategory.value) return [];
+          return products.filter(p => p.category === currentCategory.value);
+        });
+
+        // Selected product detail
+        const selectedProductId = ref(null);
+        const selectedProduct = computed(() => {
+          return products.find(p => p.id === selectedProductId.value) || {};
+        });
+
+        // Order form
+        const orderForm = reactive({
+          name: '',
+          whatsapp: '',
+        });
+
+        // Orders storage (simulate DB with localStorage)
+        const orders = ref([]);
+
+        // Load orders from localStorage
+        function loadOrders() {
+          const saved = localStorage.getItem('automationbot_orders');
+          if (saved) {
+            try {
+              orders.value = JSON.parse(saved);
+            } catch {
+              orders.value = [];
+            }
+          }
+        }
+        // Save orders to localStorage
+        function saveOrders() {
+          localStorage.setItem('automationbot_orders', JSON.stringify(orders.value));
+        }
+
+        // Generate unique order ID
+        function generateOrderId() {
+          return Math.floor(100000 + Math.random() * 900000).toString();
+        }
+
+        // Navigation
+        function goTo(target) {
+          if (target === 'products' && !currentCategory.value) {
+            // If no category selected, default to website
+            currentCategory.value = 'website';
+          }
+          if (target === 'productDetail' && !selectedProductId.value) {
+            // If no product selected, go back to products
+            page.value = 'products';
+            return;
+          }
+          page.value = target;
+          if (target === 'dashboard') {
+            currentCategory.value = '';
+            selectedProductId.value = null;
+            orderForm.name = '';
+            orderForm.whatsapp = '';
+          }
+          if (target === 'buy') {
+            orderForm.name = '';
+            orderForm.whatsapp = '';
+          }
+          if (target === 'status') {
+            loadOrders();
+          }
+          if (target === 'payment') {
+            // This page is used only for redirecting to PayPal
+          }
+        }
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+          mobileMenuOpen.value = !mobileMenuOpen.value;
+        }
+
+        // Select category from dashboard
+        function selectCategory(cat) {
+          currentCategory.value = cat;
+          page.value = 'products';
+        }
+
+        // Select product from product list
+        function selectProduct(id) {
+          selectedProductId.value = id;
+          page.value = 'productDetail';
+        }
+
+        // PayPal payment integration
+        const isPaying = ref(false);
+
+        // Submit order and redirect to PayPal
+        function submitOrder() {
+          if (!orderForm.name.trim() || !orderForm.whatsapp.trim()) {
+            alert('Mohon isi nama dan nomor WhatsApp dengan benar.');
+            return;
+          }
+          isPaying.value = true;
+
+          // Create order object
+          const newOrderId = generateOrderId();
+          const newOrder = {
+            id: newOrderId,
+            productId: selectedProduct.value.id,
+            productName: selectedProduct.value.name,
+            price: selectedProduct.value.price,
+            status: 'pending',
+            name: orderForm.name.trim(),
+            whatsapp: orderForm.whatsapp.trim(),
+            downloadLink: selectedProduct.value.downloadLink,
+          };
+          orders.value.push(newOrder);
+          saveOrders();
+
+          // Redirect to PayPal payment page with order info
+          // We'll simulate payment by opening PayPal checkout with amount and onApprove callback
+          page.value = 'payment';
+
+          // Render PayPal Buttons dynamically
+          setTimeout(() => {
+            renderPayPalButtons(newOrder);
+          }, 100);
+        }
+
+        // Render PayPal Buttons
+        function renderPayPalButtons(order) {
+          const container = document.getElementById('paypal-button-container');
+          if (container) {
+            container.innerHTML = '';
+          } else {
+            const main = document.querySelector('main');
+            const div = document.createElement('div');
+            div.id = 'paypal-button-container';
+            div.className = 'max-w-md mx-auto mt-6';
+            main.appendChild(div);
+          }
+
+          paypal.Buttons({
+            style: {
+              layout: 'vertical',
+              color: 'blue',
+              shape: 'rect',
+              label: 'paypal',
+            },
+            createOrder: function (data, actions) {
+              return actions.order.create({
+                purchase_units: [{
+                  amount: {
+                    value: order.price.toFixed(2),
+                  },
+                  description: order.productName,
+                }],
+              });
+            },
+            onApprove: function (data, actions) {
+              return actions.order.capture().then(function (details) {
+                // Update order status to success
+                const idx = orders.value.findIndex(o => o.id === order.id);
+                if (idx !== -1) {
+                  orders.value[idx].status = 'success';
+                  saveOrders();
+                }
+                alert('Pembayaran berhasil! Terima kasih telah membeli produk kami.');
+                page.value = 'status';
+              });
+            },
+            onCancel: function () {
+              alert('Pembayaran dibatalkan.');
+              page.value = 'status';
+            },
+            onError: function (err) {
+              alert('Terjadi kesalahan saat pembayaran: ' + err);
+              page.value = 'status';
+            }
+          }).render('#paypal-button-container');
+        }
+
+        // Pay order from status page
+        function payOrder(orderId) {
+          const order = orders.value.find(o => o.id === orderId);
+          if (!order) return alert('Order tidak ditemukan.');
+
+          page.value = 'payment';
+
+          setTimeout(() => {
+            renderPayPalButtons(order);
+          }, 100);
+        }
+
+        // Lifecycle hooks
+        onMounted(() => {
+          loadOrders();
+          startSlideShow();
+        });
+
+        return {
+          page,
+          mobileMenuOpen,
+          toggleMobileMenu,
+          slides,
+          currentSlide,
+          nextSlide,
+          prevSlide,
+          goToSlide,
+          currentCategory,
+          selectCategory,
+          products,
+          filteredProducts,
+          selectedProductId,
+          selectedProduct,
+          selectProduct,
+          orderForm,
+          submitOrder,
+          isPaying,
+          orders,
+          goTo,
+          payOrder,
+        };
+      },
+    }).mount('#app');
+  </script>
+</body>
+</html>
