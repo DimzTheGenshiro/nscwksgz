@@ -1,0 +1,785 @@
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   AutomationBot Store
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+  <style>
+   body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+ </head>
+ <body class="bg-gray-50 min-h-screen flex flex-col">
+  <div class="flex-grow flex flex-col" id="app">
+   <!-- Header -->
+   <header class="bg-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+     <div class="flex items-center space-x-3">
+      <img alt="AutomationBot logo, stylized letters AB in blue and white" class="h-10 w-10 rounded" height="40" src="https://storage.googleapis.com/a1aa/image/be9d547f-e5a3-4244-3002-cde6af8bf946.jpg" width="40"/>
+      <h1 class="text-2xl font-bold text-blue-700 select-none">
+       AutomationBot
+      </h1>
+     </div>
+     <nav class="hidden md:flex space-x-8 font-semibold text-gray-700">
+      <button class="hover:text-blue-700 transition-colors duration-200" data-page="dashboard">
+       Dashboard
+      </button>
+      <button class="hover:text-blue-700 transition-colors duration-200" data-page="produk">
+       Produk
+      </button>
+      <button class="hover:text-blue-700 transition-colors duration-200" data-page="pembayaran">
+       Pembayaran
+      </button>
+      <button class="hover:text-blue-700 transition-colors duration-200" data-page="status">
+       Status Order
+      </button>
+     </nav>
+     <button aria-label="Open menu" class="md:hidden text-gray-700 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded" id="mobile-menu-button">
+      <i class="fas fa-bars fa-lg">
+      </i>
+     </button>
+    </div>
+    <nav class="md:hidden bg-white shadow-md hidden flex-col space-y-1 px-4 pb-4" id="mobile-menu">
+     <button class="text-left w-full py-2 font-semibold text-gray-700 hover:text-blue-700" data-page="dashboard">
+      Dashboard
+     </button>
+     <button class="text-left w-full py-2 font-semibold text-gray-700 hover:text-blue-700" data-page="produk">
+      Produk
+     </button>
+     <button class="text-left w-full py-2 font-semibold text-gray-700 hover:text-blue-700" data-page="pembayaran">
+      Pembayaran
+     </button>
+     <button class="text-left w-full py-2 font-semibold text-gray-700 hover:text-blue-700" data-page="status">
+      Status Order
+     </button>
+    </nav>
+   </header>
+   <!-- Main Content -->
+   <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <!-- Dashboard Page -->
+    <section class="page-section" id="page-dashboard">
+     <h2 class="text-3xl font-bold text-gray-800 mb-6">
+      Dashboard
+     </h2>
+     <!-- Promo Slider -->
+     <div class="relative w-full max-w-4xl mx-auto mb-10">
+      <div class="overflow-hidden rounded-lg shadow-lg">
+       <div class="flex transition-transform duration-500 ease-in-out" id="promo-slider" style="width: 300%">
+        <img alt="Promo banner showing exclusive website offer with modern web design elements and blue accents" class="w-full flex-shrink-0" height="400" src="https://storage.googleapis.com/a1aa/image/f878a76f-b80f-4b23-a148-67711cd7d8dd.jpg" width="1200"/>
+        <img alt="Promo banner showing script discount up to 50% with coding symbols and green highlights" class="w-full flex-shrink-0" height="400" src="https://storage.googleapis.com/a1aa/image/e0541cd8-a199-4cbc-09c8-923b0bddda81.jpg" width="1200"/>
+        <img alt="Promo banner showing limited time offer on all products with clock icon and red accents" class="w-full flex-shrink-0" height="400" src="https://storage.googleapis.com/a1aa/image/65c4dc43-22e8-4394-8772-bfcbc66a48d3.jpg" width="1200"/>
+       </div>
+      </div>
+      <div class="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex space-x-3">
+       <button aria-label="Slide 1" class="w-3 h-3 rounded-full bg-blue-600" data-slide="0">
+       </button>
+       <button aria-label="Slide 2" class="w-3 h-3 rounded-full bg-gray-300" data-slide="1">
+       </button>
+       <button aria-label="Slide 3" class="w-3 h-3 rounded-full bg-gray-300" data-slide="2">
+       </button>
+      </div>
+     </div>
+     <!-- Produk Icons -->
+     <div class="max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-8 text-center">
+      <button class="flex flex-col items-center p-4 bg-white rounded-lg shadow hover:shadow-lg transition-shadow duration-300" data-category="website" data-page="produk">
+       <i class="fas fa-globe fa-3x text-blue-600 mb-3">
+       </i>
+       <span class="font-semibold text-gray-700">
+        Website
+       </span>
+      </button>
+      <button class="flex flex-col items-center p-4 bg-white rounded-lg shadow hover:shadow-lg transition-shadow duration-300" data-category="script" data-page="produk">
+       <i class="fas fa-code fa-3x text-green-600 mb-3">
+       </i>
+       <span class="font-semibold text-gray-700">
+        Script
+       </span>
+      </button>
+      <button class="flex flex-col items-center p-4 bg-white rounded-lg shadow hover:shadow-lg transition-shadow duration-300" data-category="plugin" data-page="produk">
+       <i class="fas fa-plug fa-3x text-purple-600 mb-3">
+       </i>
+       <span class="font-semibold text-gray-700">
+        Plugin
+       </span>
+      </button>
+      <button class="flex flex-col items-center p-4 bg-white rounded-lg shadow hover:shadow-lg transition-shadow duration-300" data-category="template" data-page="produk">
+       <i class="fas fa-file-code fa-3x text-pink-600 mb-3">
+       </i>
+       <span class="font-semibold text-gray-700">
+        Template
+       </span>
+      </button>
+     </div>
+    </section>
+    <!-- Produk Page -->
+    <section class="page-section hidden" id="page-produk">
+     <button class="mb-6 text-blue-600 hover:underline flex items-center space-x-2" id="back-to-dashboard">
+      <i class="fas fa-arrow-left">
+      </i>
+      <span>
+       Back to Dashboard
+      </span>
+     </button>
+     <h2 class="text-3xl font-bold text-gray-800 mb-6" id="produk-category-title">
+      Produk
+     </h2>
+     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" id="produk-list">
+      <!-- Produk items inserted by JS -->
+     </div>
+    </section>
+    <!-- Produk Detail Page -->
+    <section class="page-section hidden max-w-4xl mx-auto" id="page-produk-detail">
+     <button class="mb-6 text-blue-600 hover:underline flex items-center space-x-2" id="back-to-produk">
+      <i class="fas fa-arrow-left">
+      </i>
+      <span>
+       Back to Produk
+      </span>
+     </button>
+     <div class="bg-white rounded-lg shadow p-6 flex flex-col md:flex-row gap-6">
+      <img alt="Product thumbnail" class="w-full md:w-1/3 rounded-lg object-cover" id="produk-detail-image" src=""/>
+      <div class="flex flex-col flex-grow">
+       <h3 class="text-2xl font-bold text-gray-800 mb-3" id="produk-detail-name">
+        Product Name
+       </h3>
+       <p class="text-gray-600 mb-4 flex-grow" id="produk-detail-description">
+        Product description goes here.
+       </p>
+       <div class="text-xl font-semibold text-blue-700 mb-6" id="produk-detail-price">
+        $0.00
+       </div>
+       <button class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-colors duration-300" id="btn-buy">
+        Buy Now
+       </button>
+      </div>
+     </div>
+    </section>
+    <!-- Pembayaran Page -->
+    <section class="page-section hidden max-w-md mx-auto bg-white rounded-lg shadow p-6" id="page-pembayaran">
+     <button class="mb-6 text-blue-600 hover:underline flex items-center space-x-2" id="back-to-produk-from-pay">
+      <i class="fas fa-arrow-left">
+      </i>
+      <span>
+       Back to Produk
+      </span>
+     </button>
+     <h2 class="text-3xl font-bold text-gray-800 mb-6">
+      Pembayaran
+     </h2>
+     <form class="space-y-6" id="payment-form">
+      <div>
+       <label class="block text-gray-700 font-semibold mb-2" for="buyer-name">
+        Nama Lengkap
+       </label>
+       <input class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="buyer-name" name="buyerName" placeholder="Masukkan nama lengkap Anda" required="" type="text"/>
+      </div>
+      <div>
+       <label class="block text-gray-700 font-semibold mb-2" for="buyer-whatsapp">
+        Nomor WhatsApp
+       </label>
+       <input class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="buyer-whatsapp" name="buyerWhatsapp" pattern="^\+?\d{9,15}$" placeholder="Contoh: +6281234567890" required="" type="tel"/>
+      </div>
+      <div>
+       <label class="block text-gray-700 font-semibold mb-2" for="payment-amount">
+        Jumlah Pembayaran (USD)
+       </label>
+       <input class="w-full border border-gray-300 rounded-md px-4 py-2 bg-gray-100 cursor-not-allowed" id="payment-amount" name="paymentAmount" readonly="" type="number"/>
+      </div>
+      <button class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition-colors duration-300" type="submit">
+       Pay with PayPal
+      </button>
+     </form>
+    </section>
+    <!-- Status Order Page -->
+    <section class="page-section hidden max-w-4xl mx-auto" id="page-status">
+     <h2 class="text-3xl font-bold text-gray-800 mb-6">
+      Status Order
+     </h2>
+     <div class="space-y-6" id="orders-list">
+      <!-- Orders inserted by JS -->
+     </div>
+    </section>
+   </main>
+   <!-- Footer -->
+   <footer class="bg-white border-t border-gray-200 py-6 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-500 text-sm select-none">
+     © AutomationBot | 2025
+    </div>
+   </footer>
+  </div>
+  <!-- PayPal SDK -->
+  <script src="https://www.paypal.com/sdk/js?client-id=Ae2UJcfqNOymRYYKMYnE17sXEXBaW8tJF_NZ3M5huk1DREqaMHG_53DcgtePpGv-KXvSBNPxkTfJzboY¤cy=USD">
+  </script>
+  <script>
+   (() => {
+      // Data for products
+      const products = {
+        website: [
+          {
+            id: "w1",
+            name: "Modern Business Website",
+            description:
+              "A sleek, responsive business website template with modern design and SEO optimization.",
+            price: 10,
+            thumbnail:
+              "https://placehold.co/400x300/png?text=Modern+Business+Website+Thumbnail",
+            downloadLink:
+              "https://example.com/downloads/modern-business-website.zip",
+          },
+          {
+            id: "w2",
+            name: "Portfolio Website",
+            description:
+              "A clean and minimal portfolio website perfect for creatives and freelancers.",
+            price: 8,
+            thumbnail:
+              "https://placehold.co/400x300/png?text=Portfolio+Website+Thumbnail",
+            downloadLink:
+              "https://example.com/downloads/portfolio-website.zip",
+          },
+          {
+            id: "w3",
+            name: "E-commerce Website",
+            description:
+              "Fully functional e-commerce website template with shopping cart and payment integration.",
+            price: 15,
+            thumbnail:
+              "https://placehold.co/400x300/png?text=E-commerce+Website+Thumbnail",
+            downloadLink:
+              "https://example.com/downloads/ecommerce-website.zip",
+          },
+        ],
+        script: [
+          {
+            id: "s1",
+            name: "Chatbot Script",
+            description:
+              "A customizable chatbot script for customer support and engagement.",
+            price: 5,
+            thumbnail:
+              "https://placehold.co/400x300/png?text=Chatbot+Script+Thumbnail",
+            downloadLink:
+              "https://example.com/downloads/chatbot-script.zip",
+          },
+          {
+            id: "s2",
+            name: "Automation Script",
+            description:
+              "Script to automate repetitive tasks and improve productivity.",
+            price: 7,
+            thumbnail:
+              "https://placehold.co/400x300/png?text=Automation+Script+Thumbnail",
+            downloadLink:
+              "https://example.com/downloads/automation-script.zip",
+          },
+          {
+            id: "s3",
+            name: "Data Scraper Script",
+            description:
+              "A powerful data scraper script for extracting information from websites.",
+            price: 6,
+            thumbnail:
+              "https://placehold.co/400x300/png?text=Data+Scraper+Script+Thumbnail",
+            downloadLink:
+              "https://example.com/downloads/data-scraper-script.zip",
+          },
+        ],
+        plugin: [
+          {
+            id: "p1",
+            name: "SEO Plugin",
+            description:
+              "Plugin to optimize your website for search engines and improve rankings.",
+            price: 9,
+            thumbnail:
+              "https://placehold.co/400x300/png?text=SEO+Plugin+Thumbnail",
+            downloadLink:
+              "https://example.com/downloads/seo-plugin.zip",
+          },
+          {
+            id: "p2",
+            name: "Security Plugin",
+            description:
+              "Enhance your website security with this easy-to-install plugin.",
+            price: 12,
+            thumbnail:
+              "https://placehold.co/400x300/png?text=Security+Plugin+Thumbnail",
+            downloadLink:
+              "https://example.com/downloads/security-plugin.zip",
+          },
+          {
+            id: "p3",
+            name: "Analytics Plugin",
+            description:
+              "Track and analyze your website traffic with this analytics plugin.",
+            price: 10,
+            thumbnail:
+              "https://placehold.co/400x300/png?text=Analytics+Plugin+Thumbnail",
+            downloadLink:
+              "https://example.com/downloads/analytics-plugin.zip",
+          },
+        ],
+        template: [
+          {
+            id: "t1",
+            name: "Landing Page Template",
+            description:
+              "A high-converting landing page template for marketing campaigns.",
+            price: 7,
+            thumbnail:
+              "https://placehold.co/400x300/png?text=Landing+Page+Template+Thumbnail",
+            downloadLink:
+              "https://example.com/downloads/landing-page-template.zip",
+          },
+          {
+            id: "t2",
+            name: "Blog Template",
+            description:
+              "Clean and modern blog template for personal or professional use.",
+            price: 6,
+            thumbnail:
+              "https://placehold.co/400x300/png?text=Blog+Template+Thumbnail",
+            downloadLink:
+              "https://example.com/downloads/blog-template.zip",
+          },
+          {
+            id: "t3",
+            name: "Dashboard Template",
+            description:
+              "A fully responsive dashboard template with charts and widgets.",
+            price: 12,
+            thumbnail:
+              "https://placehold.co/400x300/png?text=Dashboard+Template+Thumbnail",
+            downloadLink:
+              "https://example.com/downloads/dashboard-template.zip",
+          },
+        ],
+      };
+
+      // Orders stored in localStorage
+      let orders = JSON.parse(localStorage.getItem("automationbot_orders")) || [];
+
+      // Current selected product for purchase
+      let currentProduct = null;
+
+      // Current page
+      let currentPage = "dashboard";
+
+      // Elements
+      const pages = {
+        dashboard: document.getElementById("page-dashboard"),
+        produk: document.getElementById("page-produk"),
+        produkDetail: document.getElementById("page-produk-detail"),
+        pembayaran: document.getElementById("page-pembayaran"),
+        status: document.getElementById("page-status"),
+      };
+
+      const produkListEl = document.getElementById("produk-list");
+      const produkCategoryTitle = document.getElementById("produk-category-title");
+      const produkDetailImage = document.getElementById("produk-detail-image");
+      const produkDetailName = document.getElementById("produk-detail-name");
+      const produkDetailDescription = document.getElementById("produk-detail-description");
+      const produkDetailPrice = document.getElementById("produk-detail-price");
+      const btnBuy = document.getElementById("btn-buy");
+      const paymentForm = document.getElementById("payment-form");
+      const buyerNameInput = document.getElementById("buyer-name");
+      const buyerWhatsappInput = document.getElementById("buyer-whatsapp");
+      const paymentAmountInput = document.getElementById("payment-amount");
+      const ordersListEl = document.getElementById("orders-list");
+
+      // Mobile menu toggle
+      const mobileMenuButton = document.getElementById("mobile-menu-button");
+      const mobileMenu = document.getElementById("mobile-menu");
+      mobileMenuButton.addEventListener("click", () => {
+        mobileMenu.classList.toggle("hidden");
+      });
+
+      // Navigation buttons
+      document.querySelectorAll("button[data-page]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const page = btn.getAttribute("data-page");
+          if (page === "produk") {
+            // If category specified, show that category
+            const category = btn.getAttribute("data-category");
+            if (category) {
+              showProdukPage(category);
+            } else {
+              showProdukPage();
+            }
+          } else {
+            showPage(page);
+          }
+          if (!mobileMenu.classList.contains("hidden")) {
+            mobileMenu.classList.add("hidden");
+          }
+        });
+      });
+
+      // Back buttons
+      document.getElementById("back-to-dashboard").addEventListener("click", () => {
+        showPage("dashboard");
+      });
+      document.getElementById("back-to-produk").addEventListener("click", () => {
+        if (currentProduct) {
+          showProdukPage(currentProduct.category);
+        } else {
+          showProdukPage();
+        }
+      });
+      document
+        .getElementById("back-to-produk-from-pay")
+        .addEventListener("click", () => {
+          if (currentProduct) {
+            showProdukPage(currentProduct.category);
+          } else {
+            showProdukPage();
+          }
+        });
+
+      // Show page function
+      function showPage(page) {
+        currentPage = page;
+        Object.entries(pages).forEach(([key, el]) => {
+          if (key === page) {
+            el.classList.remove("hidden");
+          } else {
+            el.classList.add("hidden");
+          }
+        });
+        if (page === "status") {
+          renderOrders();
+        }
+      }
+
+      // Show Produk page with optional category filter
+      function showProdukPage(category) {
+        currentPage = "produk";
+        Object.entries(pages).forEach(([key, el]) => {
+          if (key === "produk") {
+            el.classList.remove("hidden");
+          } else {
+            el.classList.add("hidden");
+          }
+        });
+        let filteredProducts = [];
+        if (category && products[category]) {
+          filteredProducts = products[category].map((p) => ({ ...p, category }));
+          produkCategoryTitle.textContent = `Produk: ${capitalize(category)}`;
+        } else {
+          // Show all products from all categories
+          filteredProducts = [];
+          Object.entries(products).forEach(([cat, prods]) => {
+            prods.forEach((p) => filteredProducts.push({ ...p, category: cat }));
+          });
+          produkCategoryTitle.textContent = "Semua Produk";
+        }
+        renderProdukList(filteredProducts);
+      }
+
+      // Render product list
+      function renderProdukList(prods) {
+        produkListEl.innerHTML = "";
+        prods.forEach((p) => {
+          const card = document.createElement("div");
+          card.className =
+            "bg-white rounded-lg shadow hover:shadow-lg transition-shadow duration-300 cursor-pointer flex flex-col";
+          card.tabIndex = 0;
+          card.setAttribute("role", "button");
+          card.setAttribute("aria-pressed", "false");
+          card.setAttribute("aria-label", `View details for ${p.name}`);
+          card.innerHTML = `
+            <img
+              src="${p.thumbnail}"
+              alt="Thumbnail image of product ${p.name} showing a representative design"
+              class="rounded-t-lg object-cover w-full h-48"
+              loading="lazy"
+            />
+            <div class="p-4 flex flex-col flex-grow">
+              <h3 class="text-lg font-semibold text-gray-800 mb-2">${p.name}</h3>
+              <p class="text-gray-600 flex-grow">${p.description}</p>
+              <div class="mt-4 text-blue-700 font-bold text-xl">$${p.price.toFixed(
+                2
+              )}</div>
+            </div>
+          `;
+          card.addEventListener("click", () => {
+            showProdukDetail(p);
+          });
+          card.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              showProdukDetail(p);
+            }
+          });
+          produkListEl.appendChild(card);
+        });
+      }
+
+      // Show product detail page
+      function showProdukDetail(product) {
+        currentProduct = product;
+        currentProduct.category = currentProduct.category || "unknown";
+        produkDetailImage.src = product.thumbnail;
+        produkDetailImage.alt = `Thumbnail image of product ${product.name} showing a representative design`;
+        produkDetailName.textContent = product.name;
+        produkDetailDescription.textContent = product.description;
+        produkDetailPrice.textContent = `$${product.price.toFixed(2)}`;
+        showPage("produkDetail");
+      }
+
+      // Buy button click
+      btnBuy.addEventListener("click", () => {
+        if (!currentProduct) return;
+        buyerNameInput.value = "";
+        buyerWhatsappInput.value = "";
+        paymentAmountInput.value = currentProduct.price.toFixed(2);
+        showPage("pembayaran");
+      });
+
+      // Payment form submit
+      paymentForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (!currentProduct) return;
+
+        const buyerName = buyerNameInput.value.trim();
+        const buyerWhatsapp = buyerWhatsappInput.value.trim();
+        const amount = currentProduct.price;
+
+        if (!buyerName) {
+          alert("Nama lengkap harus diisi.");
+          return;
+        }
+        if (!buyerWhatsapp.match(/^\+?\d{9,15}$/)) {
+          alert(
+            "Nomor WhatsApp harus valid dan berisi 9 sampai 15 digit, bisa diawali dengan +."
+          );
+          return;
+        }
+
+        // Create order
+        const orderId = generateOrderId();
+        const order = {
+          id: orderId,
+          item: currentProduct.name,
+          price: amount,
+          buyerName,
+          buyerWhatsapp,
+          status: "pending",
+          downloadLink: currentProduct.downloadLink,
+          createdAt: new Date().toISOString(),
+        };
+        orders.push(order);
+        saveOrders();
+
+        // Start PayPal payment
+        startPayPalPayment(order);
+      });
+
+      // Generate order ID
+      function generateOrderId() {
+        return (
+          "ORD" +
+          Math.random()
+            .toString(36)
+            .substring(2, 8)
+            .toUpperCase()
+        );
+      }
+
+      // Save orders to localStorage
+      function saveOrders() {
+        localStorage.setItem("automationbot_orders", JSON.stringify(orders));
+      }
+
+      // Render orders list in status page
+      function renderOrders() {
+        ordersListEl.innerHTML = "";
+        if (orders.length === 0) {
+          ordersListEl.innerHTML =
+            '<p class="text-gray-600 italic">Belum ada order yang dibuat.</p>';
+          return;
+        }
+        orders.forEach((order) => {
+          const orderCard = document.createElement("div");
+          orderCard.className =
+            "bg-white rounded-lg shadow p-6 flex flex-col space-y-3";
+          orderCard.innerHTML = `
+            <div class="flex justify-between items-center">
+              <h3 class="text-xl font-semibold text-gray-800">Order ID #${order.id}</h3>
+              <span class="px-3 py-1 rounded-full text-sm font-semibold ${
+                order.status === "success"
+                  ? "bg-green-100 text-green-800"
+                  : "bg-yellow-100 text-yellow-800"
+              }">
+                ${order.status === "success" ? "Success" : "Pending"}
+              </span>
+            </div>
+            <p><strong>Item:</strong> ${order.item}</p>
+            <p><strong>Price:</strong> $${order.price.toFixed(2)}</p>
+            <p><strong>Buyer:</strong> ${order.buyerName}</p>
+            <p><strong>WhatsApp:</strong> ${order.buyerWhatsapp}</p>
+            ${
+              order.status === "pending"
+                ? `<button data-order-id="${order.id}" class="btn-pay bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition-colors duration-300 w-full mt-3">Pay Now</button>`
+                : `<a href="${order.downloadLink}" target="_blank" rel="noopener noreferrer" class="btn-download bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg transition-colors duration-300 w-full mt-3 text-center block">Klik for Download Link Product</a>`
+            }
+          `;
+          ordersListEl.appendChild(orderCard);
+        });
+
+        // Attach pay button listeners
+        document.querySelectorAll(".btn-pay").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const orderId = btn.getAttribute("data-order-id");
+            const order = orders.find((o) => o.id === orderId);
+            if (!order) return alert("Order tidak ditemukan.");
+            startPayPalPayment(order);
+          });
+        });
+      }
+
+      // Start PayPal payment flow
+      function startPayPalPayment(order) {
+        showPage("pembayaran");
+        buyerNameInput.value = order.buyerName;
+        buyerWhatsappInput.value = order.buyerWhatsapp;
+        paymentAmountInput.value = order.price.toFixed(2);
+
+        // Disable form inputs and button while processing
+        buyerNameInput.disabled = true;
+        buyerWhatsappInput.disabled = true;
+        paymentAmountInput.disabled = true;
+        paymentForm.querySelector("button[type=submit]").disabled = true;
+        paymentForm.querySelector("button[type=submit]").textContent =
+          "Processing...";
+
+        // Clear previous PayPal buttons container if any
+        let paypalButtonsContainer = document.getElementById("paypal-buttons-container");
+        if (paypalButtonsContainer) {
+          paypalButtonsContainer.remove();
+        }
+        paypalButtonsContainer = document.createElement("div");
+        paypalButtonsContainer.id = "paypal-buttons-container";
+        paypalButtonsContainer.className = "mt-6";
+        paymentForm.appendChild(paypalButtonsContainer);
+
+        paypal
+          .Buttons({
+            style: {
+              layout: "vertical",
+              color: "blue",
+              shape: "rect",
+              label: "paypal",
+            },
+            createOrder: function (data, actions) {
+              return actions.order.create({
+                purchase_units: [
+                  {
+                    amount: {
+                      value: order.price.toFixed(2),
+                    },
+                    description: order.item,
+                  },
+                ],
+              });
+            },
+            onApprove: function (data, actions) {
+              return actions.order.capture().then(function (details) {
+                // Update order status
+                const idx = orders.findIndex((o) => o.id === order.id);
+                if (idx !== -1) {
+                  orders[idx].status = "success";
+                  saveOrders();
+                }
+                alert(
+                  `Pembayaran berhasil! Terima kasih, ${details.payer.name.given_name}.`
+                );
+                // Reset form and inputs
+                buyerNameInput.disabled = false;
+                buyerWhatsappInput.disabled = false;
+                paymentAmountInput.disabled = false;
+                paymentForm.querySelector("button[type=submit]").disabled = false;
+                paymentForm.querySelector("button[type=submit]").textContent =
+                  "Pay with PayPal";
+                paypalButtonsContainer.remove();
+                // Show status page
+                showPage("status");
+              });
+            },
+            onCancel: function () {
+              alert("Pembayaran dibatalkan.");
+              buyerNameInput.disabled = false;
+              buyerWhatsappInput.disabled = false;
+              paymentAmountInput.disabled = false;
+              paymentForm.querySelector("button[type=submit]").disabled = false;
+              paymentForm.querySelector("button[type=submit]").textContent =
+                "Pay with PayPal";
+              paypalButtonsContainer.remove();
+            },
+            onError: function (err) {
+              alert("Terjadi kesalahan saat pembayaran. Silakan coba lagi.");
+              buyerNameInput.disabled = false;
+              buyerWhatsappInput.disabled = false;
+              paymentAmountInput.disabled = false;
+              paymentForm.querySelector("button[type=submit]").disabled = false;
+              paymentForm.querySelector("button[type=submit]").textContent =
+                "Pay with PayPal";
+              paypalButtonsContainer.remove();
+              console.error(err);
+            },
+          })
+          .render("#paypal-buttons-container");
+      }
+
+      // Capitalize first letter
+      function capitalize(str) {
+        if (!str) return "";
+        return str.charAt(0).toUpperCase() + str.slice(1);
+      }
+
+      // Promo slider logic
+      const promoSlider = document.getElementById("promo-slider");
+      const slideButtons = document.querySelectorAll("[data-slide]");
+      let currentSlide = 0;
+      const totalSlides = slideButtons.length;
+
+      function goToSlide(n) {
+        currentSlide = n;
+        promoSlider.style.transform = `translateX(-${(100 / totalSlides) * n}%)`;
+        slideButtons.forEach((btn, i) => {
+          if (i === n) {
+            btn.classList.remove("bg-gray-300");
+            btn.classList.add("bg-blue-600");
+          } else {
+            btn.classList.remove("bg-blue-600");
+            btn.classList.add("bg-gray-300");
+          }
+        });
+      }
+
+      slideButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const slideIndex = parseInt(btn.getAttribute("data-slide"));
+          goToSlide(slideIndex);
+        });
+      });
+
+      // Auto slide every 5 seconds
+      setInterval(() => {
+        let nextSlide = (currentSlide + 1) % totalSlides;
+        goToSlide(nextSlide);
+      }, 5000);
+
+      // Initialize
+      showPage("dashboard");
+      goToSlide(0);
+    })();
+  </script>
+ </body>
+</html>
